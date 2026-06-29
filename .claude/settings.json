@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -NoProfile -NonInteractive -File \".claude\\hooks\\html-lint.ps1\"",
+            "timeout": 30,
+            "statusMessage": "Linting HTML..."
+          }
+        ]
+      }
+    ]
+  }
+}
