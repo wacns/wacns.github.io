@@ -1,0 +1,22 @@
+{
+  "name": "Stremio — wacns Source",
+  "identifier": "com.wacns.stremio-source",
+  "sourceURL": "https://wacns.github.io/stremio-source/ios/sidestore.json",
+  "apps": [
+    {
+      "name": "Stremio",
+      "bundleIdentifier": "com.stremio.streamio",
+      "developerName": "Stremio",
+      "subtitle": "Stream anything",
+      "version": "1.0.0",
+      "versionDate": "2025-01-01",
+      "downloadURL": "PLACEHOLDER_IOS_IPA_URL",
+      "localizedDescription": "Stremio for iOS — stream movies, series, and more.",
+      "iconURL": "PLACEHOLDER_ICON_URL",
+      "tintColor": "8A2BE2",
+      "size": 50000000,
+      "screenshotURLs": []
+    }
+  ],
+  "news": []
+}

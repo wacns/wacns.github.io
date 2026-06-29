@@ -1,0 +1,15 @@
+{
+  "name": "Stremio — wacns Source",
+  "apps": [
+    {
+      "name": "Stremio",
+      "version": "1.0.0",
+      "down": "PLACEHOLDER_IOS_IPA_URL",
+      "dev": "Stremio",
+      "icon": "PLACEHOLDER_ICON_URL",
+      "category": "Entertainment",
+      "description": "Stremio for iOS — stream movies, series, and more.",
+      "bundleID": "com.stremio.streamio"
+    }
+  ]
+}

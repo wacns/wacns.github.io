@@ -1,35 +1,341 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Site Maintenance</title>
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
-    <style>
-      html, body { padding: 0; margin: 0; width: 100%; height: 100%; }
-      * { box-sizing: border-box; }
-      body { text-align: center; padding: 0; background: #d6433b; color: #fff; font-family: Open Sans; font-weight: 100; font-size: 20px; display: flex; justify-content: center; align-items: center; }
-      h1 { font-size: 50px; font-weight: 100; text-align: center; }
-      article { display: block; width: 700px; padding: 50px; margin: 0 auto; }
-      a { color: #fff; font-weight: bold; }
-      a:hover { text-decoration: none; }
-      svg { width: 75px; margin-top: 1em; }
-    </style>
-  </head>
-  <body>
-    <article>
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 202.24 202.24"><defs><style>.cls-1{fill:#fff;}</style></defs><title>Asset 3</title><g id="Layer_2" data-name="Layer 2"><g id="Capa_1" data-name="Capa 1"><path class="cls-1" d="M101.12,0A101.12,101.12,0,1,0,202.24,101.12,101.12,101.12,0,0,0,101.12,0ZM159,148.76H43.28a11.57,11.57,0,0,1-10-17.34L91.09,31.16a11.57,11.57,0,0,1,20.06,0L169,131.43a11.57,11.57,0,0,1-10,17.34Z"/><path class="cls-1" d="M101.12,36.93h0L43.27,137.21H159L101.13,36.94Zm0,88.7a7.71,7.71,0,1,1,7.71-7.71A7.71,7.71,0,0,1,101.12,125.63Zm7.71-50.13a7.56,7.56,0,0,1-.11,1.3l-3.8,22.49a3.86,3.86,0,0,1-7.61,0l-3.8-22.49a8,8,0,0,1-.11-1.3,7.71,7.71,0,1,1,15.43,0Z"/></g></g></svg>
-      <h1>We&rsquo;ll be back soon!</h1>
-      <div>
-        <p>Sorry for the inconvenience. We're performing some maintenance at the moment. We'll be back up shortly!</p>
-      </div>
-    </article>
-    <!-- Default Statcounter code for Github https://wacns.github.io/ -->
-    <script>
-      var sc_project=12838192;
-      var sc_invisible=1;
-      var sc_security="3d0acbc9";
-    </script>
-    <script src="https://www.statcounter.com/counter/counter.js" async></script>
-    <noscript><div class="statcounter"><a title="Web Analytics" href="https://statcounter.com/" target="_blank"><img class="statcounter" src="https://c.statcounter.com/12838192/0/3d0acbc9/1/" alt="Web Analytics" referrerpolicy="no-referrer-when-downgrade"></a></div></noscript>
-    <!-- End of Statcounter Code -->
-  </body>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stremio Source — wacns</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:         #0a0a0f;
+      --card-bg:    #12121a;
+      --card-border:#1e1e2e;
+      --accent:     #8A2BE2;
+      --accent-rgb: 138, 43, 226;
+      --text:       #f0f0f5;
+      --muted:      #888899;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      padding: 0 1rem 4rem;
+    }
+
+    /* ── Header ── */
+    header {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 3.5rem 0 2.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      text-align: center;
+    }
+    .app-icon {
+      width: 88px;
+      height: 88px;
+      border-radius: 22px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .app-icon img { width: 100%; height: 100%; object-fit: cover; border-radius: 22px; }
+    .app-icon-placeholder {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), #5a0fa0);
+      opacity: 0.6;
+    }
+    h1 { font-size: 2rem; font-weight: 600; letter-spacing: -0.5px; }
+    .subtitle { color: var(--muted); font-size: 0.95rem; font-weight: 400; }
+
+    /* ── Section ── */
+    .section {
+      max-width: 860px;
+      margin: 2.5rem auto 0;
+    }
+    .section-heading {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1rem;
+      padding-left: 2px;
+    }
+
+    /* ── Grid ── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+    }
+    @media (min-width: 560px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (min-width: 760px) { .grid { grid-template-columns: repeat(4, 1fr); } }
+
+    /* ── Card ── */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 1.1rem 1rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .card:hover {
+      border-color: rgba(var(--accent-rgb), 0.45);
+      box-shadow: 0 0 20px rgba(var(--accent-rgb), 0.12);
+    }
+    .card-name {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .card-url {
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      word-break: break-all;
+      line-height: 1.4;
+    }
+    .card-actions { margin-top: auto; display: flex; flex-direction: column; gap: 0.45rem; }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      text-decoration: none;
+      transition: opacity 0.15s, background 0.15s;
+      line-height: 1;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-primary:hover { opacity: 0.85; }
+    .btn-copy {
+      background: rgba(var(--accent-rgb), 0.15);
+      color: var(--accent);
+      border: 1px solid rgba(var(--accent-rgb), 0.25);
+    }
+    .btn-copy:hover { background: rgba(var(--accent-rgb), 0.22); }
+    .btn-copy.copied {
+      background: rgba(34, 197, 94, 0.15);
+      color: #22c55e;
+      border-color: rgba(34, 197, 94, 0.25);
+    }
+
+    .hint {
+      font-size: 0.65rem;
+      color: var(--muted);
+      line-height: 1.4;
+      text-align: center;
+    }
+
+    /* ── Toast ── */
+    #toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(1rem);
+      background: #22c55e;
+      color: #fff;
+      padding: 0.55rem 1.25rem;
+      border-radius: 99px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      opacity: 0;
+      transition: opacity 0.2s, transform 0.2s;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    #toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ── Footer ── */
+    footer {
+      max-width: 860px;
+      margin: 3rem auto 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+    footer a {
+      color: var(--muted);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      transition: color 0.15s;
+    }
+    footer a:hover { color: var(--text); }
+    footer svg { width: 16px; height: 16px; fill: currentColor; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="app-icon" id="appIcon">
+      <div class="app-icon-placeholder" id="iconPlaceholder"></div>
+    </div>
+    <h1 id="appName">Stremio</h1>
+    <p class="subtitle" id="appSubtitle"></p>
+  </header>
+
+  <section class="section" id="iosSection">
+    <div class="section-heading">iOS</div>
+    <div class="grid" id="iosGrid"></div>
+  </section>
+
+  <section class="section" id="tvosSection" style="display:none">
+    <div class="section-heading">tvOS</div>
+    <div class="grid" id="tvosGrid"></div>
+  </section>
+
+  <footer>
+    <span>wacns.github.io</span>
+    <span>·</span>
+    <a href="https://github.com/wacns" target="_blank" rel="noopener" aria-label="GitHub">
+      <svg viewBox="0 0 16 16" aria-hidden="true">
+        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38
+          0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13
+          -.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87
+          2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95
+          0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21
+          2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04
+          2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15
+          0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01
+          1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+      </svg>
+    </a>
+  </footer>
+
+  <div id="toast">Copied!</div>
+
+  <script src="config.js"></script>
+  <script>
+    (function () {
+      const app = CONFIG.app;
+      const baseURL = CONFIG.baseURL;
+
+      // Header
+      document.getElementById('appName').textContent = app.name;
+      document.getElementById('appSubtitle').textContent = app.subtitle;
+
+      if (app.iconURL && app.iconURL !== 'PLACEHOLDER_ICON_URL') {
+        const img = document.createElement('img');
+        img.src = app.iconURL;
+        img.alt = app.name;
+        const placeholder = document.getElementById('iconPlaceholder');
+        placeholder.replaceWith(img);
+      }
+
+      // Toast
+      let toastTimer;
+      function showToast() {
+        const toast = document.getElementById('toast');
+        toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove('show'), 2000);
+      }
+
+      // Card builder
+      function buildCard(platform, os) {
+        const sourceURL = baseURL + '/' + os + '/' + platform.file;
+
+        const card = document.createElement('div');
+        card.className = 'card';
+
+        const name = document.createElement('div');
+        name.className = 'card-name';
+        name.textContent = platform.name;
+
+        const url = document.createElement('div');
+        url.className = 'card-url';
+        url.textContent = sourceURL;
+
+        const actions = document.createElement('div');
+        actions.className = 'card-actions';
+
+        if (platform.deepLink) {
+          const btn = document.createElement('a');
+          btn.className = 'btn btn-primary';
+          btn.href = platform.deepLink + encodeURIComponent(sourceURL);
+          btn.textContent = 'Add to ' + platform.name;
+          actions.appendChild(btn);
+        } else {
+          const btn = document.createElement('button');
+          btn.className = 'btn btn-copy';
+          btn.textContent = 'Copy Source URL';
+          btn.addEventListener('click', function () {
+            navigator.clipboard.writeText(sourceURL).then(function () {
+              btn.textContent = 'Copied!';
+              btn.classList.add('copied');
+              showToast();
+              setTimeout(function () {
+                btn.textContent = 'Copy Source URL';
+                btn.classList.remove('copied');
+              }, 2000);
+            });
+          });
+          actions.appendChild(btn);
+
+          const hint = document.createElement('p');
+          hint.className = 'hint';
+          hint.textContent = 'Open ' + platform.name + ' → Sources → + and paste the URL';
+          actions.appendChild(hint);
+        }
+
+        card.appendChild(name);
+        card.appendChild(url);
+        card.appendChild(actions);
+        return card;
+      }
+
+      // iOS section
+      const iosGrid = document.getElementById('iosGrid');
+      CONFIG.platforms.forEach(function (p) {
+        iosGrid.appendChild(buildCard(p, 'ios'));
+      });
+
+      // tvOS section
+      if (CONFIG.tvosEnabled) {
+        const tvosSection = document.getElementById('tvosSection');
+        const tvosGrid = document.getElementById('tvosGrid');
+        tvosSection.style.display = '';
+        CONFIG.platforms
+          .filter(function (p) { return p.supportsTV; })
+          .forEach(function (p) {
+            tvosGrid.appendChild(buildCard(p, 'tvos'));
+          });
+      }
+    })();
+  </script>
+</body>
 </html>
