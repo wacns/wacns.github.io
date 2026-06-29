@@ -19,10 +19,23 @@ const CONFIG = {
     iconURL: "https://www.stremio.com/website/stremio-purple-small.png",
     tintColor: "665af1",
     size: 50000000,
+    minOSVersion: "16.0",
     screenshotURLs: [],
     downloadURL: {
       ios: "https://dl.strem.io/apple/2.0.2b17/ios/stremio_iOS.ipa"
-    }
+    },
+    versions: [
+      {
+        version: "1.0.0",
+        date: "2025-01-01",
+        localizedDescription: "Stremio for iOS — stream movies, series, and more.",
+        downloadURL: {
+          ios: "https://dl.strem.io/apple/2.0.2b17/ios/stremio_iOS.ipa"
+        },
+        size: 50000000,
+        minOSVersion: "16.0"
+      }
+    ]
   },
 
   // Platform definitions
@@ -48,6 +61,7 @@ const CONFIG = {
       name: "Feather",
       file: "feather.json",
       deepLink: "feather://source/",
+      rawUrl: true,
       supportsTV: false
     },
     {

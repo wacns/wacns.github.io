@@ -286,7 +286,7 @@
         if (platform.deepLink) {
           const btn = document.createElement('a');
           btn.className = 'btn btn-primary';
-          btn.href = platform.deepLink + encodeURIComponent(sourceURL);
+          btn.href = platform.deepLink + (platform.rawUrl ? sourceURL : encodeURIComponent(sourceURL));
           btn.textContent = 'Add to ' + platform.name;
           actions.appendChild(btn);
         } else {
