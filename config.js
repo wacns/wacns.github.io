@@ -7,7 +7,7 @@ const CONFIG = {
   // Base URL (no trailing slash)
   baseURL: "https://wacns.github.io/stremio-source",
 
-  // App metadata — fill in when ready
+  // App metadata
   app: {
     name: "Stremio",
     bundleIdentifier: "com.stremio.streamio",
@@ -47,7 +47,28 @@ const CONFIG = {
       id: "feather",
       name: "Feather",
       file: "feather.json",
-      deepLink: "feather://source?url=",
+      deepLink: "feather://source/",
+      supportsTV: false
+    },
+    {
+      id: "stikstore",
+      name: "StikStore",
+      file: "stikstore.json",
+      deepLink: "stikstore://add-source?url=",
+      supportsTV: false
+    },
+    {
+      id: "livecontainer",
+      name: "LiveContainer",
+      file: "livecontainer.json",
+      deepLink: "livecontainer://source?url=",
+      supportsTV: false
+    },
+    {
+      id: "trollapps",
+      name: "TrollApps",
+      file: "trollapps.json",
+      deepLink: "trollapps://add?url=",
       supportsTV: false
     },
     {

@@ -1,7 +1,7 @@
 {
   "name": "Stremio — wacns Source",
   "identifier": "com.wacns.stremio-source",
-  "sourceURL": "https://wacns.github.io/stremio-source/ios/gbox.json",
+  "sourceURL": "https://wacns.github.io/stremio-source/ios/trollapps.json",
   "apps": [
     {
       "name": "Stremio",

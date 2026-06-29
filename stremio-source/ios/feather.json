@@ -10,10 +10,10 @@
       "subtitle": "Stream anything",
       "version": "1.0.0",
       "versionDate": "2025-01-01",
-      "downloadURL": "PLACEHOLDER_IOS_IPA_URL",
+      "downloadURL": "https://dl.strem.io/apple/2.0.2b17/ios/stremio_iOS.ipa",
       "localizedDescription": "Stremio for iOS — stream movies, series, and more.",
-      "iconURL": "PLACEHOLDER_ICON_URL",
-      "tintColor": "8A2BE2",
+      "iconURL": "https://www.stremio.com/website/stremio-purple-small.png",
+      "tintColor": "665af1",
       "size": 50000000,
       "screenshotURLs": []
     }

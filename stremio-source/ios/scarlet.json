@@ -4,9 +4,9 @@
     {
       "name": "Stremio",
       "version": "1.0.0",
-      "down": "PLACEHOLDER_IOS_IPA_URL",
+      "down": "https://dl.strem.io/apple/2.0.2b17/ios/stremio_iOS.ipa",
       "dev": "Stremio",
-      "icon": "PLACEHOLDER_ICON_URL",
+      "icon": "https://www.stremio.com/website/stremio-purple-small.png",
       "category": "Entertainment",
       "description": "Stremio for iOS — stream movies, series, and more.",
       "bundleID": "com.stremio.streamio"
