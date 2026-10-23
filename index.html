@@ -5,6 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Abdullah — Backend Developer</title>
   <meta name="description" content="Abdullah (wacns) — backend developer in Manama, Bahrain. .NET, C#, MySQL and integrations.">
+  <meta name="theme-color" content="#0a0a0f">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://wacns.com/">
+  <meta property="og:title" content="Abdullah — Backend Developer">
+  <meta property="og:description" content="Backend developer in Manama, Bahrain. .NET, C#, MySQL performance and integrations.">
+  <meta property="og:image" content="https://wacns.github.io/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <script>document.documentElement.classList.add('js');</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -29,6 +40,61 @@
       line-height: 1.55;
       min-height: 100vh;
       padding: 0 1rem 4rem;
+      position: relative;
+      z-index: 0;
+    }
+
+    /* ── Hero background ── */
+    .hero-fx {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 620px;
+      overflow: hidden;
+      z-index: -1;
+      pointer-events: none;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px);
+      background-size: 44px 44px;
+      -webkit-mask-image: radial-gradient(ellipse 70% 75% at 50% 25%, #000 25%, transparent 75%);
+              mask-image: radial-gradient(ellipse 70% 75% at 50% 25%, #000 25%, transparent 75%);
+      animation: grid-drift 24s linear infinite;
+    }
+    .hero-glow {
+      position: absolute;
+      top: -140px; left: 50%;
+      width: 640px; height: 420px;
+      transform: translateX(-60%);
+      z-index: -1;
+      pointer-events: none;
+      background: radial-gradient(closest-side, rgba(var(--accent-rgb), 0.28), transparent);
+      filter: blur(20px);
+      animation: glow 9s ease-in-out infinite alternate;
+    }
+    @keyframes grid-drift { to { background-position: 44px 44px, 44px 44px; } }
+    @keyframes glow {
+      from { transform: translateX(-60%) scale(1);    opacity: 0.8; }
+      to   { transform: translateX(-40%) scale(1.15); opacity: 1; }
+    }
+
+    /* ── Reveal on scroll ── */
+    .js .reveal {
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .js .reveal.in { opacity: 1; transform: none; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero-bg, .hero-glow { animation: none; }
+      .js .reveal { opacity: 1; transform: none; transition: none; }
+      .card { transition: none; }
     }
 
     main, header, footer { max-width: 760px; margin: 0 auto; }
@@ -44,7 +110,11 @@
       margin-bottom: 0.75rem;
     }
     h1 {
-      font-size: 2.4rem;
+      background: linear-gradient(120deg, #ffffff 30%, #c9a8ff);
+      -webkit-background-clip: text;
+              background-clip: text;
+      color: transparent;
+      font-size: 2.8rem;
       font-weight: 600;
       letter-spacing: -0.8px;
       line-height: 1.15;
@@ -153,6 +223,44 @@
       padding: 0.2rem 0.45rem;
     }
 
+    .card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.85rem;
+      font-family: var(--mono);
+      font-size: 0.66rem;
+      color: var(--muted);
+      min-height: 1em;
+    }
+    .card-meta:empty { display: none; }
+    .lang-dot {
+      display: inline-block;
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      margin-right: 0.35rem;
+      vertical-align: 1px;
+    }
+
+    /* ── Experience ── */
+    .timeline { list-style: none; border-left: 1px solid var(--card-border); margin-left: 6px; }
+    .timeline li { position: relative; padding: 0 0 1.6rem 1.4rem; }
+    .timeline li:last-child { padding-bottom: 0; }
+    .timeline li::before {
+      content: "";
+      position: absolute;
+      left: -6px; top: 0.35rem;
+      width: 11px; height: 11px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 2px solid var(--accent);
+    }
+    .timeline li.current::before { background: var(--accent); box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.18); }
+    .tl-when { font-family: var(--mono); font-size: 0.7rem; color: var(--accent); }
+    .tl-title { font-size: 0.95rem; font-weight: 600; margin-top: 0.15rem; }
+    .tl-org { font-size: 0.84rem; color: var(--muted); }
+    .tl-desc { font-size: 0.84rem; color: var(--muted); margin-top: 0.4rem; max-width: 60ch; }
+
     /* ── Skills ── */
     .skills {
       display: grid;
@@ -188,6 +296,10 @@
   </style>
 </head>
 <body>
+  <div class="hero-fx" aria-hidden="true">
+    <div class="hero-bg"></div>
+    <div class="hero-glow"></div>
+  </div>
   <header>
     <p class="handle">@wacns</p>
     <h1>Abdullah</h1>
@@ -212,37 +324,58 @@
 
   <main>
     <section id="projects" aria-labelledby="projects-heading">
-      <h2 id="projects-heading">Projects</h2>
+      <h2 id="projects-heading" class="reveal">Projects</h2>
       <div class="projects">
-        <a class="card" href="https://github.com/wacns/financial-advisor-releases" target="_blank" rel="noopener">
+        <a class="card reveal" data-repo="wacns/financial-advisor-releases" href="https://github.com/wacns/financial-advisor-releases" target="_blank" rel="noopener">
           <span class="card-title">FinancialAdvisor <span class="arrow" aria-hidden="true">↗</span></span>
           <span class="card-desc">Personal finance and budgeting app with an AI assistant. Ships for Android, iOS, Windows, macOS and Linux with built-in desktop auto-updates.</span>
           <ul class="tags"><li>Cross-platform</li><li>Supabase</li><li>AI</li></ul>
+          <span class="card-meta"></span>
         </a>
-        <a class="card" href="https://github.com/wacns/api.garagecom" target="_blank" rel="noopener">
+        <a class="card reveal" data-repo="wacns/api.garagecom" href="https://github.com/wacns/api.garagecom" target="_blank" rel="noopener">
           <span class="card-title">Garagecom API <span class="arrow" aria-hidden="true">↗</span></span>
           <span class="card-desc">Backend for Garagecom, a car-owner and garage app. Controllers, middleware and filters on ASP.NET Core, packaged with Docker.</span>
           <ul class="tags"><li>C#</li><li>ASP.NET Core</li><li>Docker</li></ul>
+          <span class="card-meta"></span>
         </a>
-        <a class="card" href="https://github.com/wacns/8bp-free-gift-collector" target="_blank" rel="noopener">
+        <a class="card reveal" data-repo="wacns/8bp-free-gift-collector" href="https://github.com/wacns/8bp-free-gift-collector" target="_blank" rel="noopener">
           <span class="card-title">8 Ball Pool Gift Collector <span class="arrow" aria-hidden="true">↗</span></span>
           <span class="card-desc">Collects the free daily gifts from the 8 Ball Pool web shop on a schedule and logs every reward to an archive.</span>
           <ul class="tags"><li>Puppeteer</li><li>GitHub Actions</li></ul>
+          <span class="card-meta"></span>
         </a>
-        <a class="card" href="https://github.com/wacns/AutoStore-WACNS" target="_blank" rel="noopener">
+        <a class="card reveal" data-repo="wacns/AutoStore-WACNS" href="https://github.com/wacns/AutoStore-WACNS" target="_blank" rel="noopener">
           <span class="card-title">AutoStore <span class="arrow" aria-hidden="true">↗</span></span>
           <span class="card-desc">Discord storefront bot with products, stock, user balances and payment handling, all managed through slash commands.</span>
           <ul class="tags"><li>Node.js</li><li>discord.js</li><li>MongoDB</li></ul>
+          <span class="card-meta"></span>
         </a>
-        <a class="card" href="/stremio/">
+        <a class="card reveal" href="/stremio/">
           <span class="card-title">Stremio Source <span class="arrow" aria-hidden="true">→</span></span>
           <span class="card-desc">One-tap Stremio sources for AltStore, SideStore, Feather and seven other iOS sideloading apps, generated from a single config.</span>
           <ul class="tags"><li>GitHub Pages</li><li>JSON</li></ul>
+          <span class="card-meta"></span>
         </a>
       </div>
     </section>
 
-    <section aria-labelledby="skills-heading">
+    <section class="reveal" aria-labelledby="experience-heading">
+      <h2 id="experience-heading">Experience</h2>
+      <ol class="timeline">
+        <li class="current">
+          <p class="tl-when">Now</p>
+          <p class="tl-title">Officer – Backend Developer</p>
+          <p class="tl-org">RemoteApps · HCM platform</p>
+          <p class="tl-desc">Payroll and reporting backends in .NET, MySQL performance tuning on large payroll datasets, branded Word and Excel report generation, and integrations with third-party learning platforms.</p>
+        </li>
+        <li>
+          <p class="tl-title">Information Technology</p>
+          <p class="tl-org">University of Bahrain</p>
+        </li>
+      </ol>
+    </section>
+
+    <section class="reveal" aria-labelledby="skills-heading">
       <h2 id="skills-heading">What I work with</h2>
       <div class="skills">
         <div class="skill-group">
@@ -268,5 +401,60 @@
       <a href="https://www.linkedin.com/in/abdullah-mohammed-137928219" target="_blank" rel="noopener">LinkedIn</a>
     </span>
   </footer>
+
+  <script>
+    // Reveal sections and cards as they scroll into view
+    (function () {
+      var items = document.querySelectorAll('.reveal');
+      if (!('IntersectionObserver' in window)) {
+        items.forEach(function (el) { el.classList.add('in'); });
+        return;
+      }
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+        });
+      }, { rootMargin: '0px 0px -8% 0px' });
+      items.forEach(function (el) { io.observe(el); });
+    })();
+
+    // Live GitHub stats on project cards (cached per tab for an hour)
+    (function () {
+      var HOUR = 3600000;
+      function ago(iso) {
+        var d = Math.floor((Date.now() - new Date(iso)) / 86400000);
+        if (d < 1) return 'today';
+        if (d === 1) return 'yesterday';
+        if (d < 30) return d + ' days ago';
+        var m = Math.floor(d / 30);
+        if (m < 12) return m + (m === 1 ? ' month ago' : ' months ago');
+        var y = Math.floor(m / 12);
+        return y + (y === 1 ? ' year ago' : ' years ago');
+      }
+      function render(card, r) {
+        var meta = card.querySelector('.card-meta');
+        if (!meta) return;
+        var parts = [];
+        if (r.language) parts.push('<span><span class="lang-dot"></span>' + r.language + '</span>');
+        if (r.stargazers_count > 0) parts.push('<span>★ ' + r.stargazers_count + '</span>');
+        if (r.pushed_at) parts.push('<span>Updated ' + ago(r.pushed_at) + '</span>');
+        meta.innerHTML = parts.join('');
+      }
+      document.querySelectorAll('.card[data-repo]').forEach(function (card) {
+        var repo = card.getAttribute('data-repo'), key = 'gh:' + repo, cached = null;
+        try { cached = JSON.parse(sessionStorage.getItem(key)); } catch (e) {}
+        if (cached && Date.now() - cached.t < HOUR) { render(card, cached.r); return; }
+        fetch('https://api.github.com/repos/' + repo)
+          .then(function (res) { return res.ok ? res.json() : null; })
+          .then(function (r) {
+            if (!r) return;
+            var slim = { language: r.language, stargazers_count: r.stargazers_count, pushed_at: r.pushed_at };
+            try { sessionStorage.setItem(key, JSON.stringify({ t: Date.now(), r: slim })); } catch (e) {}
+            render(card, slim);
+          })
+          .catch(function () {});
+      });
+    })();
+  </script>
 </body>
 </html>
