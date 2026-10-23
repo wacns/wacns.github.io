@@ -242,25 +242,6 @@
       vertical-align: 1px;
     }
 
-    /* ── Experience ── */
-    .timeline { list-style: none; border-left: 1px solid var(--card-border); margin-left: 6px; }
-    .timeline li { position: relative; padding: 0 0 1.6rem 1.4rem; }
-    .timeline li:last-child { padding-bottom: 0; }
-    .timeline li::before {
-      content: "";
-      position: absolute;
-      left: -6px; top: 0.35rem;
-      width: 11px; height: 11px;
-      border-radius: 50%;
-      background: var(--bg);
-      border: 2px solid var(--accent);
-    }
-    .timeline li.current::before { background: var(--accent); box-shadow: 0 0 0 4px rgba(var(--accent-rgb), 0.18); }
-    .tl-when { font-family: var(--mono); font-size: 0.7rem; color: var(--accent); }
-    .tl-title { font-size: 0.95rem; font-weight: 600; margin-top: 0.15rem; }
-    .tl-org { font-size: 0.84rem; color: var(--muted); }
-    .tl-desc { font-size: 0.84rem; color: var(--muted); margin-top: 0.4rem; max-width: 60ch; }
-
     /* ── Skills ── */
     .skills {
       display: grid;
@@ -307,7 +288,6 @@
     <p class="intro">
       I build backend systems in .NET and C#, tune MySQL queries until they're fast,
       and connect platforms that weren't designed to talk to each other.
-      Currently working on an HCM platform at RemoteApps.
     </p>
     <div class="links">
       <a class="btn btn-primary" href="https://github.com/wacns" target="_blank" rel="noopener">
@@ -357,22 +337,6 @@
           <span class="card-meta"></span>
         </a>
       </div>
-    </section>
-
-    <section class="reveal" aria-labelledby="experience-heading">
-      <h2 id="experience-heading">Experience</h2>
-      <ol class="timeline">
-        <li class="current">
-          <p class="tl-when">Now</p>
-          <p class="tl-title">Officer – Backend Developer</p>
-          <p class="tl-org">RemoteApps · HCM platform</p>
-          <p class="tl-desc">Payroll and reporting backends in .NET, MySQL performance tuning on large payroll datasets, branded Word and Excel report generation, and integrations with third-party learning platforms.</p>
-        </li>
-        <li>
-          <p class="tl-title">Information Technology</p>
-          <p class="tl-org">University of Bahrain</p>
-        </li>
-      </ol>
     </section>
 
     <section class="reveal" aria-labelledby="skills-heading">
