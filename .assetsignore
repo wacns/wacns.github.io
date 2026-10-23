@@ -1,0 +1,10 @@
+# Files the Cloudflare worker must not serve on wacns.com
+.git
+.git/**
+.claude
+.claude/**
+.gitignore
+.htmlvalidate.json
+.assetsignore
+CLAUDE.md
+plan.md
