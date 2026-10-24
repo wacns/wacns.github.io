@@ -2,3 +2,4 @@ CLAUDE.local.md
 .idea/
 .claude/settings.local.json
 .og-tmp.html
+__pycache__/
