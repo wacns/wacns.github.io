@@ -24,6 +24,7 @@
 
     :root {
       --bg:         #0a0a0f;
+      --band:       #0e0e15;
       --card-bg:    #12121a;
       --card-border:#1e1e2e;
       --accent:     #8A2BE2;
@@ -39,7 +40,6 @@
       font-family: 'Inter', sans-serif;
       line-height: 1.55;
       min-height: 100vh;
-      padding: 0 1rem 4rem;
       position: relative;
       z-index: 0;
     }
@@ -97,12 +97,58 @@
       .card { transition: none; }
     }
 
-    main, header, footer { max-width: 760px; margin: 0 auto; }
+    html { scroll-behavior: smooth; scroll-padding-top: 64px; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+    .wrap { max-width: 760px; margin: 0 auto; padding: 0 1rem; }
+
+    /* ── Top bar ── */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(10, 10, 15, 0.72);
+      -webkit-backdrop-filter: blur(12px);
+              backdrop-filter: blur(12px);
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.2s;
+    }
+    .topbar.scrolled { border-bottom-color: var(--card-border); }
+    .topbar .wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 54px;
+    }
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    .brand img { width: 22px; height: 22px; }
+    .topnav { display: flex; gap: 0.2rem; }
+    .topnav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.8rem;
+      padding: 0.35rem 0.6rem;
+      border-radius: 7px;
+      transition: color 0.15s, background 0.15s;
+    }
+    .topnav a:hover { color: var(--text); }
+    .topnav a.active { color: var(--text); background: var(--card-border); }
+    @media (max-width: 440px) { .topnav a.opt { display: none; } }
+
+    /* ── Bands ── */
+    .band { padding: 3.75rem 0; }
+    .band.alt { background: var(--band); border-top: 1px solid var(--card-border); border-bottom: 1px solid var(--card-border); }
 
     a { color: inherit; }
 
     /* ── Intro ── */
-    header { padding: 4.5rem 0 1rem; }
+    .hero { padding-top: 4rem; padding-bottom: 3.5rem; }
     .handle {
       font-family: var(--mono);
       font-size: 0.8rem;
@@ -157,16 +203,44 @@
     .btn-ghost:hover { border-color: rgba(var(--accent-rgb), 0.5); }
 
     /* ── Sections ── */
-    section { margin-top: 3.5rem; }
     h2 {
-      font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 1rem;
-      padding-left: 2px;
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: -0.6px;
+      line-height: 1.2;
+      margin-bottom: 1.25rem;
     }
+    h2 .pulse { vertical-align: 0.35em; }
+
+    /* ── Stats ── */
+    .stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1.4rem;
+      margin-top: 2rem;
+      list-style: none;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+    .stats li[hidden] { display: none; }
+    .stats strong { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+    /* ── Call to action ── */
+    .cta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+    .cta h2 {
+      font-size: clamp(2rem, 6vw, 2.8rem);
+      letter-spacing: -1.2px;
+      line-height: 1.05;
+      margin-bottom: 0.6rem;
+    }
+    .cta p { color: var(--muted); max-width: 42ch; }
+    .cta .links { margin-top: 0; }
 
     /* ── Projects ── */
     .projects {
@@ -278,7 +352,7 @@
     @keyframes pulse { to { box-shadow: 0 0 0 7px rgba(34, 197, 94, 0); } }
 
     /* ── Activity ── */
-    #activity[hidden] { display: none; }
+    .band[hidden] { display: none; }
     .activity {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
@@ -325,19 +399,37 @@
 
     /* ── Footer ── */
     footer {
-      margin-top: 4rem;
-      padding-top: 1.5rem;
+      background: var(--band);
       border-top: 1px solid var(--card-border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
       color: var(--muted);
       font-size: 0.8rem;
+      padding: 2.5rem 0 2rem;
     }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.75rem;
+    }
+    @media (min-width: 600px) { .footer-grid { grid-template-columns: 2fr 1fr 1fr; } }
+    .footer-about { grid-column: 1 / -1; }
+    @media (min-width: 600px) { .footer-about { grid-column: auto; } }
+    .footer-about p { margin-top: 0.6rem; max-width: 32ch; }
+    .footer-col h3 {
+      font-size: 0.66rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
     footer a { text-decoration: none; transition: color 0.15s; }
     footer a:hover { color: var(--text); }
-    .footer-links { display: flex; gap: 1rem; }
+    .footer-bottom {
+      margin-top: 2rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--card-border);
+      font-size: 0.75rem;
+    }
   </style>
 </head>
 <body>
@@ -345,7 +437,19 @@
     <div class="hero-bg"></div>
     <div class="hero-glow"></div>
   </div>
-  <header>
+  <header class="topbar" id="topbar">
+    <div class="wrap">
+      <a class="brand" href="#top"><img src="/favicon.svg" alt="">wacns</a>
+      <nav class="topnav" aria-label="Sections">
+        <a href="#now" class="opt">Now</a>
+        <a href="#projects">Projects</a>
+        <a href="#activity">Activity</a>
+        <a href="#skills">Skills</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="hero wrap" id="top">
     <p class="handle">@wacns</p>
     <h1>Abdullah</h1>
     <p class="role">Backend Developer · Manama, Bahrain</p>
@@ -364,10 +468,15 @@
       </a>
       <a class="btn btn-ghost" href="#projects">See projects</a>
     </div>
-  </header>
+    <ul class="stats" aria-label="At a glance">
+      <li id="statContrib" hidden><strong id="statContribN"></strong> contributions this year</li>
+      <li><strong id="statProjects">4</strong> projects</li>
+      <li id="statSince" hidden>On GitHub since <strong id="statSinceN"></strong></li>
+    </ul>
+  </div>
 
   <main>
-    <section class="reveal" aria-labelledby="now-heading">
+    <div class="band alt"><section class="wrap reveal" id="now" aria-labelledby="now-heading">
       <h2 id="now-heading"><span class="pulse" aria-hidden="true"></span>Now</h2>
       <div class="now">
         <ul>
@@ -377,9 +486,9 @@
         </ul>
         <p class="now-updated">Updated October 2026</p>
       </div>
-    </section>
+    </section></div>
 
-    <section id="projects" aria-labelledby="projects-heading">
+    <div class="band"><section class="wrap" id="projects" aria-labelledby="projects-heading">
       <h2 id="projects-heading" class="reveal">Projects</h2>
       <div class="projects">
         <article class="card reveal" data-repo="wacns/financial-advisor-releases">
@@ -406,16 +515,10 @@
           <ul class="tags"><li>Node.js</li><li>discord.js</li><li>MongoDB</li></ul>
           <span class="card-meta"></span>
         </article>
-        <article class="card reveal">
-          <span class="card-title">Stremio Source</span>
-          <span class="card-desc">One-tap Stremio sources for AltStore, SideStore, Feather and seven other iOS sideloading apps, generated from a single config.</span>
-          <ul class="tags"><li>GitHub Pages</li><li>JSON</li></ul>
-          <span class="card-meta"></span>
-        </article>
       </div>
-    </section>
+    </section></div>
 
-    <section id="activity" class="reveal" aria-labelledby="activity-heading" hidden>
+    <div class="band alt" id="activityBand" hidden><section class="wrap reveal" id="activity" aria-labelledby="activity-heading">
       <h2 id="activity-heading">Activity</h2>
       <div class="activity">
         <p class="activity-total"><strong id="activityCount"></strong> <span>contributions on GitHub in the last year</span></p>
@@ -424,9 +527,9 @@
           Less <i class="l0"></i><i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="l4"></i> More
         </div>
       </div>
-    </section>
+    </section></div>
 
-    <section class="reveal" aria-labelledby="skills-heading">
+    <div class="band"><section class="wrap reveal" id="skills" aria-labelledby="skills-heading">
       <h2 id="skills-heading">What I work with</h2>
       <div class="skills">
         <div class="skill-group">
@@ -442,15 +545,45 @@
           <p>Docker, GitHub Actions, Cloudflare, Puppeteer</p>
         </div>
       </div>
-    </section>
+    </section></div>
+
+    <div class="band alt"><section class="wrap reveal cta" aria-labelledby="cta-heading">
+      <div>
+        <h2 id="cta-heading">Let's build something.</h2>
+        <p>Always happy to talk backend, APIs and integrations.</p>
+      </div>
+      <div class="links">
+        <a class="btn btn-primary" href="https://www.linkedin.com/in/abdullah-mohammed-137928219" target="_blank" rel="noopener">Message me on LinkedIn</a>
+        <a class="btn btn-ghost" href="https://github.com/wacns" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </section></div>
   </main>
 
   <footer>
-    <span>© 2026 wacns</span>
-    <span class="footer-links">
-      <a href="https://github.com/wacns" target="_blank" rel="noopener">GitHub</a>
-      <a href="https://www.linkedin.com/in/abdullah-mohammed-137928219" target="_blank" rel="noopener">LinkedIn</a>
-    </span>
+    <div class="wrap">
+      <div class="footer-grid">
+        <div class="footer-about">
+          <a class="brand" href="#top"><img src="/favicon.svg" alt="">wacns</a>
+          <p>Backend developer in Manama, Bahrain.</p>
+        </div>
+        <div class="footer-col">
+          <h3>Site</h3>
+          <ul>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#activity">Activity</a></li>
+            <li><a href="#skills">Skills</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Elsewhere</h3>
+          <ul>
+            <li><a href="https://github.com/wacns" target="_blank" rel="noopener">GitHub</a></li>
+            <li><a href="https://www.linkedin.com/in/abdullah-mohammed-137928219" target="_blank" rel="noopener">LinkedIn</a></li>
+          </ul>
+        </div>
+      </div>
+      <p class="footer-bottom">© 2026 wacns</p>
+    </div>
   </footer>
 
   <script>
@@ -507,9 +640,48 @@
       });
     })();
 
+    // Stats: project count, GitHub join year (cached per tab)
+    (function () {
+      document.getElementById('statProjects').textContent = document.querySelectorAll('#projects .card').length;
+      var KEY = 'gh:user:wacns', cached = null;
+      function show(year) {
+        if (!year) return;
+        document.getElementById('statSinceN').textContent = year;
+        document.getElementById('statSince').hidden = false;
+      }
+      try { cached = JSON.parse(sessionStorage.getItem(KEY)); } catch (e) {}
+      if (cached && cached.y) { show(cached.y); return; }
+      fetch('https://api.github.com/users/wacns')
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (u) {
+          if (!u || !u.created_at) return;
+          var y = new Date(u.created_at).getUTCFullYear();
+          try { sessionStorage.setItem(KEY, JSON.stringify({ y: y })); } catch (e) {}
+          show(y);
+        })
+        .catch(function () {});
+    })();
+
+    // Top bar: border once scrolled, highlight the section in view
+    (function () {
+      var bar = document.getElementById('topbar');
+      var links = [].slice.call(document.querySelectorAll('.topnav a'));
+      function onScroll() {
+        bar.classList.toggle('scrolled', window.scrollY > 8);
+        var current = null;
+        links.forEach(function (a) {
+          var sec = document.querySelector(a.getAttribute('href'));
+          if (sec && sec.offsetParent !== null && sec.getBoundingClientRect().top <= 120) current = a;
+        });
+        links.forEach(function (a) { a.classList.toggle('active', a === current); });
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+    })();
+
     // GitHub contribution heatmap (hidden if the data can't be loaded)
     (function () {
-      var section = document.getElementById('activity');
+      var section = document.getElementById('activityBand');
       var COLORS = ['#1a1a26', '#3b1d63', '#5b25a0', '#7a2bd6', '#a66bf0'];
       var KEY = 'gh:contrib:wacns';
       function draw(data) {
@@ -532,6 +704,8 @@
         document.getElementById('activityGraph').innerHTML =
           '<svg viewBox="0 0 ' + w + ' ' + h + '" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' + rects + '</svg>';
         document.getElementById('activityCount').textContent = total.toLocaleString('en-US');
+        document.getElementById('statContribN').textContent = total.toLocaleString('en-US');
+        document.getElementById('statContrib').hidden = false;
         section.hidden = false;
       }
       var cached = null;
