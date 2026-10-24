@@ -197,13 +197,13 @@ NOTES = [
 ]
 TIL = {n["slug"]: n for n in NOTES}
 
-def notes_list(limit=None, lang="en"):
+def notes_list(limit=None, lang="en", dates=True):
     items = NOTES[:limit] if limit else NOTES
     out = []
     for n in items:
         attr = ' lang="en" dir="ltr"' if lang == "ar" else ""
         out.append(f"""        <li{attr}><a href="/til/{n['slug']}/">
-          <time class="note-date" datetime="{n['date']}">{n['nice']}</time>
+          {f'<time class="note-date" datetime="{n["date"]}">{n["nice"]}</time>' if dates else ''}
           <span><span class="note-title">{html.escape(n['title'])}</span><span class="note-sum">{html.escape(n['summary'])}</span></span>
         </a></li>""")
     return "\n".join(out)
@@ -366,8 +366,8 @@ def homepage(lang):
         <a class="more-link" href="/til/">{h['all_notes']}</a>
       </div>
       {h['notes_note']}
-      <ul class="note-list">
-{notes_list(3, lang)}
+      <ul class="note-list no-dates">
+{notes_list(3, lang, dates=False)}
       </ul>
     </section></div>
 

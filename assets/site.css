@@ -624,3 +624,4 @@ html[lang="ar"] .palette-group { letter-spacing: 0; font-size: 0.72rem; }
 }
 .notes-lang { font-size: 0.85rem; color: var(--muted); margin: -0.5rem 0 1rem; }
 html[dir="rtl"] bdi { direction: ltr; unicode-bidi: isolate; }
+.note-list.no-dates a { grid-template-columns: 1fr; }
