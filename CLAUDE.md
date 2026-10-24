@@ -57,8 +57,14 @@ When adding a TIL entry: add it to `NOTES` in the script (plus a `til_*` page fu
 npx html-validate index.html ar/index.html til/index.html til/*/index.html uses/index.html 404.html stremio/index.html
 ```
 
-The CSP in `_headers` only allows scripts from self + Cloudflare Insights, styles/fonts from Google Fonts,
+The CSP in `_headers` only allows scripts from self + Cloudflare Insights, styles and fonts from self,
 and `connect-src` to `api.github.com` and `github-contributions-api.jogruber.de`. Update it if you add a new origin.
+
+### Performance notes
+
+- Fonts are **self-hosted** in `assets/fonts/` (Inter variable, IBM Plex Sans Arabic 400/600/700, OFL licences alongside) and preloaded. Don't reintroduce Google Fonts.
+- `/assets/*` is cached for a year (`immutable`). The generator appends a content hash (`?v=…`) to `site.css` / `site.js`, so **always regenerate pages after editing those two files**. Font files aren't versioned: give a changed font a new filename.
+- Keep layout stable (CLS): anything filled in by JavaScript should reserve its space (see `.stats li.pending`), and the saved intro length is applied by the inline boot script before first paint.
 
 ## Worker and subdomains
 

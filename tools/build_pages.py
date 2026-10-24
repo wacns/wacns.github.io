@@ -13,10 +13,20 @@ GH_SVG = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.5
 LI_SVG = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M0 1.15C0 .52.52 0 1.17 0h13.66C15.48 0 16 .52 16 1.15v13.7c0 .63-.52 1.15-1.17 1.15H1.17C.52 16 0 15.48 0 14.85V1.15zM4.75 13.4V6.17H2.35v7.23h2.4zM3.55 5.18c.84 0 1.36-.56 1.36-1.25-.02-.71-.52-1.25-1.34-1.25-.82 0-1.36.54-1.36 1.25 0 .7.52 1.25 1.33 1.25h.01zM8.48 13.4V9.36c0-.22.02-.43.08-.58.17-.43.57-.88 1.23-.88.87 0 1.22.66 1.22 1.64v3.86h2.4V9.26c0-2.22-1.18-3.25-2.76-3.25-1.27 0-1.84.7-2.16 1.2v.02h-.02l.02-.02V6.17h-2.4c.03.68 0 7.23 0 7.23h2.4z"/></svg>'
 GH_SVG = GH_SVG.replace("-1.590.82", "-1.59.82")
 
+import hashlib
+def _ver(rel):
+    """Short content hash so long-cached assets refresh as soon as they change."""
+    with open(os.path.join(OUT, rel), "rb") as f:
+        return hashlib.sha256(f.read()).hexdigest()[:10]
+CSS_URL = "/assets/site.css?v=" + _ver("assets/site.css")
+JS_URL = "/assets/site.js?v=" + _ver("assets/site.js")
+
 THEME_BOOT = ("<script>(function(){var d=document.documentElement,t=null;d.classList.add('js');"
               "try{t=localStorage.getItem('theme');}catch(e){}"
               "if(t!=='light'&&t!=='dark'){t=window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';}"
-              "d.setAttribute('data-theme',t);})();</script>")
+              "d.setAttribute('data-theme',t);"
+              "try{if(localStorage.getItem('intro')==='long')d.setAttribute('data-intro','long');}catch(e){}"
+              "})();</script>")
 
 S = {
   "en": dict(skip="Skip to content", palette="Search and commands", theme="Switch theme", lang_label="العربية", lang_href="/ar/",
@@ -32,9 +42,9 @@ S = {
 def head(lang, title, desc, path, extra="", alternates=None, og=True, og_image="/og.png", canonical=True, robots=None):
     url = "https://wacns.com" + path
     dirattr = ' dir="rtl"' if lang == "ar" else ""
-    fonts = "family=Inter:wght@300;400;500;600;700"
+    preload = '<link rel="preload" href="/assets/fonts/inter-latin-var.woff2" as="font" type="font/woff2" crossorigin>'
     if lang == "ar":
-        fonts += "&amp;family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700"
+        preload += '\n  <link rel="preload" href="/assets/fonts/plex-arabic-400.woff2" as="font" type="font/woff2" crossorigin>'
     alt = ""
     if alternates:
         alt = "".join(f'\n  <link rel="alternate" hreflang="{hl}" href="https://wacns.com{p}">' for hl, p in alternates)
@@ -60,10 +70,8 @@ def head(lang, title, desc, path, extra="", alternates=None, og=True, og_image="
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   {f'<link rel="canonical" href="{url}">' if canonical else ''}{f'<meta name="robots" content="{robots}">' if robots else ''}{alt}{ogt}
   {THEME_BOOT}
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?{fonts}&amp;display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/site.css">{extra}
+  {preload}
+  <link rel="stylesheet" href="{CSS_URL}">{extra}
 </head>"""
 
 def topbar(lang, nav, brand_href, lang_href=None):
@@ -136,8 +144,8 @@ def footer(lang, home):
     </div>
   </footer>"""
 
-TAIL = """
-  <script src="/assets/site.js" defer></script>
+TAIL = f"""
+  <script src="{JS_URL}" defer></script>
 </body>
 </html>
 """
@@ -328,9 +336,9 @@ def homepage(lang):
         <a class="btn btn-ghost" href="#projects">{h['see']}</a>
       </div>
       <ul class="stats" aria-label="{h['stats_label']}">
-        <li id="statContrib" hidden><strong id="statContribN"></strong> {h['stats'][0]}</li>
+        <li id="statContrib" class="pending"><strong id="statContribN">000</strong> {h['stats'][0]}</li>
         <li><strong id="statProjects">{len(h['cards'])}</strong> {h['stats'][1]}</li>
-        <li id="statSince" hidden>{h['stats'][2]} <strong id="statSinceN"></strong></li>
+        <li id="statSince" class="pending">{h['stats'][2]} <strong id="statSinceN">0000</strong></li>
       </ul>
     </div>
 

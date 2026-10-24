@@ -22,7 +22,7 @@ def til_entries():
 
 
 TEMPLATE = """<!DOCTYPE html><html><head><meta charset="utf-8">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>@font-face{{font-family:Inter;font-weight:100 900;src:url("file://{font}") format("woff2");}}</style>
 <style>
 *{{margin:0;box-sizing:border-box}}
 body{{width:1200px;height:630px;background:#0a0a0f;font-family:Inter,sans-serif;color:#f0f0f5;position:relative;overflow:hidden;padding:84px 96px}}
@@ -63,7 +63,8 @@ def main():
         for out, chip, title, summary, url in cards():
             size = 76 if len(title) <= 40 else 64 if len(title) <= 60 else 56
             doc = TEMPLATE.format(size=size, chip=html.escape(chip), title=html.escape(title),
-                                  summary=html.escape(summary), url=html.escape(url), favicon=favicon)
+                                  summary=html.escape(summary), url=html.escape(url), favicon=favicon,
+                                  font=os.path.join(ROOT, "assets", "fonts", "inter-latin-var.woff2"))
             tmp = os.path.join(ROOT, ".og-tmp.html")
             with open(tmp, "w", encoding="utf-8") as f:
                 f.write(doc)

@@ -122,6 +122,7 @@
       $all('[data-intro-text]').forEach(function (p) { p.hidden = p.getAttribute('data-intro-text') !== which; });
       $all('[data-intro-text="' + which + '"] mark').forEach(function (m) { m.classList.add('in'); });
       store('intro', which);
+      if (which === 'long') doc.setAttribute('data-intro', 'long'); else doc.removeAttribute('data-intro');
     }
     buttons.forEach(function (b) { b.addEventListener('click', function () { show(b.getAttribute('data-intro')); }); });
     show(store('intro') === 'long' ? 'long' : 'short');
@@ -165,7 +166,7 @@
     if (n) n.textContent = $all('#projects .card').length;
     var since = $('#statSince');
     if (!since) return;
-    function show(y) { if (!y) return; $('#statSinceN').textContent = y; since.hidden = false; }
+    function show(y) { if (!y) return; $('#statSinceN').textContent = y; since.classList.remove('pending'); }
     var cached = cacheGet('gh:user:wacns', 24 * HOUR);
     if (cached) { show(cached); return; }
     getJSON('https://api.github.com/users/' + 'wacns').then(function (u) {
@@ -198,7 +199,7 @@
       var totalText = total.toLocaleString('en-US');
       $('#activityCount').textContent = totalText;
       var stat = $('#statContrib');
-      if (stat) { $('#statContribN').textContent = totalText; stat.hidden = false; }
+      if (stat) { $('#statContribN').textContent = totalText; stat.classList.remove('pending'); }
       var band = $('#activityBand');
       if (band) band.hidden = false;
     }
