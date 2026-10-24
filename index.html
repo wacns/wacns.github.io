@@ -92,7 +92,7 @@
     .js .reveal.in { opacity: 1; transform: none; }
 
     @media (prefers-reduced-motion: reduce) {
-      .hero-bg, .hero-glow { animation: none; }
+      .hero-bg, .hero-glow, .pulse { animation: none; }
       .js .reveal { opacity: 1; transform: none; transition: none; }
       .card { transition: none; }
     }
@@ -237,6 +237,75 @@
       vertical-align: 1px;
     }
 
+    /* ── Now ── */
+    .now {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 1.1rem 1.15rem;
+    }
+    .now ul { list-style: none; display: flex; flex-direction: column; gap: 0.55rem; }
+    .now li {
+      position: relative;
+      padding-left: 1.1rem;
+      font-size: 0.9rem;
+      font-weight: 300;
+    }
+    .now li::before {
+      content: "";
+      position: absolute;
+      left: 0; top: 0.55em;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+    .now-updated {
+      margin-top: 0.85rem;
+      font-family: var(--mono);
+      font-size: 0.66rem;
+      color: var(--muted);
+    }
+    .pulse {
+      display: inline-block;
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #22c55e;
+      margin-right: 0.45rem;
+      vertical-align: 1px;
+      box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.6);
+      animation: pulse 2s ease-out infinite;
+    }
+    @keyframes pulse { to { box-shadow: 0 0 0 7px rgba(34, 197, 94, 0); } }
+
+    /* ── Activity ── */
+    #activity[hidden] { display: none; }
+    .activity {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 1.1rem 1.15rem;
+    }
+    .activity-total { font-size: 0.9rem; margin-bottom: 0.85rem; }
+    .activity-total strong { font-weight: 600; color: var(--text); }
+    .activity-total span { color: var(--muted); font-weight: 300; }
+    .activity svg { display: block; width: 100%; height: auto; }
+    .activity-legend {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 0.25rem;
+      margin-top: 0.6rem;
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      color: var(--muted);
+    }
+    .activity-legend i { width: 9px; height: 9px; border-radius: 2px; display: inline-block; }
+    .activity-legend .l0 { background: #1a1a26; }
+    .activity-legend .l1 { background: #3b1d63; }
+    .activity-legend .l2 { background: #5b25a0; }
+    .activity-legend .l3 { background: #7a2bd6; }
+    .activity-legend .l4 { background: #a66bf0; }
+
     /* ── Skills ── */
     .skills {
       display: grid;
@@ -298,6 +367,18 @@
   </header>
 
   <main>
+    <section class="reveal" aria-labelledby="now-heading">
+      <h2 id="now-heading"><span class="pulse" aria-hidden="true"></span>Now</h2>
+      <div class="now">
+        <ul>
+          <li>Shipping FinancialAdvisor 1.7: an AI assistant with flexible funding options and a deeper budgeting toolkit.</li>
+          <li>Building small tools and dashboards on Cloudflare Workers for my own projects.</li>
+          <li>Rebuilding this site, one detail at a time.</li>
+        </ul>
+        <p class="now-updated">Updated October 2026</p>
+      </div>
+    </section>
+
     <section id="projects" aria-labelledby="projects-heading">
       <h2 id="projects-heading" class="reveal">Projects</h2>
       <div class="projects">
@@ -331,6 +412,17 @@
           <ul class="tags"><li>GitHub Pages</li><li>JSON</li></ul>
           <span class="card-meta"></span>
         </article>
+      </div>
+    </section>
+
+    <section id="activity" class="reveal" aria-labelledby="activity-heading" hidden>
+      <h2 id="activity-heading">Activity</h2>
+      <div class="activity">
+        <p class="activity-total"><strong id="activityCount"></strong> <span>contributions on GitHub in the last year</span></p>
+        <div id="activityGraph" role="img" aria-label="GitHub contribution graph for the last year"></div>
+        <div class="activity-legend" aria-hidden="true">
+          Less <i class="l0"></i><i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="l4"></i> More
+        </div>
       </div>
     </section>
 
@@ -413,6 +505,46 @@
           })
           .catch(function () {});
       });
+    })();
+
+    // GitHub contribution heatmap (hidden if the data can't be loaded)
+    (function () {
+      var section = document.getElementById('activity');
+      var COLORS = ['#1a1a26', '#3b1d63', '#5b25a0', '#7a2bd6', '#a66bf0'];
+      var KEY = 'gh:contrib:wacns';
+      function draw(data) {
+        var days = (data.contributions || []).filter(function (d) { return d && d.date; });
+        if (!days.length) return;
+        days.sort(function (a, b) { return a.date < b.date ? -1 : 1; });
+        var total = (data.total && data.total.lastYear) ||
+          days.reduce(function (n, d) { return n + (d.count || 0); }, 0);
+        var cell = 10, gap = 3, step = cell + gap;
+        var firstDow = new Date(days[0].date + 'T00:00:00Z').getUTCDay();
+        var weeks = Math.ceil((days.length + firstDow) / 7);
+        var w = weeks * step - gap, h = 7 * step - gap;
+        var rects = days.map(function (d, i) {
+          var idx = i + firstDow, x = Math.floor(idx / 7) * step, y = (idx % 7) * step;
+          var lvl = Math.max(0, Math.min(4, d.level || 0));
+          var label = d.count + (d.count === 1 ? ' contribution on ' : ' contributions on ') + d.date;
+          return '<rect x="' + x + '" y="' + y + '" width="' + cell + '" height="' + cell +
+                 '" rx="2" fill="' + COLORS[lvl] + '"><title>' + label + '</title></rect>';
+        }).join('');
+        document.getElementById('activityGraph').innerHTML =
+          '<svg viewBox="0 0 ' + w + ' ' + h + '" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' + rects + '</svg>';
+        document.getElementById('activityCount').textContent = total.toLocaleString('en-US');
+        section.hidden = false;
+      }
+      var cached = null;
+      try { cached = JSON.parse(sessionStorage.getItem(KEY)); } catch (e) {}
+      if (cached && Date.now() - cached.t < 3600000) { draw(cached.d); return; }
+      fetch('https://github-contributions-api.jogruber.de/v4/wacns?y=last')
+        .then(function (res) { return res.ok ? res.json() : null; })
+        .then(function (d) {
+          if (!d) return;
+          try { sessionStorage.setItem(KEY, JSON.stringify({ t: Date.now(), d: d })); } catch (e) {}
+          draw(d);
+        })
+        .catch(function () {});
     })();
   </script>
 </body>

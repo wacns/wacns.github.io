@@ -8,3 +8,6 @@
 .assetsignore
 CLAUDE.md
 plan.md
+wrangler.jsonc
+.wrangler
+node_modules
