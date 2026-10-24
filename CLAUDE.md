@@ -112,7 +112,8 @@ The GitHub Pages copy (wacns.github.io) redirects to the same path on wacns.com 
 
 ## Google Analytics and consent
 
-- GA4 is wired in `assets/site.js` via `GA_ID` (empty = no banner, no tracking). It only loads after the visitor clicks **Allow** in the consent banner; **No thanks** disables it and deletes `_ga*` cookies. Choice is stored in localStorage (`consent:analytics`); "Cookie settings" in the footer reopens the banner.
+- GA4 is wired in `assets/site.js` via `GA_ID` (empty = no banner, no tracking).
+- **Currently `CONSENT_REQUIRED = false`** (owner's temporary request): GA loads for every visitor and the banner is off. To restore the banner set `CONSENT_REQUIRED = true` in **both** `assets/site.js` and `tools/build_pages.py` (it switches the privacy page text), then regenerate. It only loads after the visitor clicks **Allow** in the consent banner; **No thanks** disables it and deletes `_ga*` cookies. Choice is stored in localStorage (`consent:analytics`); "Cookie settings" in the footer reopens the banner.
 - Keep both banner buttons equally prominent (EU consent rules).
 - `/privacy/` describes everything collected. Update it if tracking changes.
 - After changing `GA_ID`, regenerate pages so the `site.js?v=` hash changes.

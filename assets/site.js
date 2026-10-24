@@ -10,6 +10,9 @@
   var HOUR = 3600000;
   // Google Analytics 4 measurement ID (e.g. 'G-ABC123XYZ'). Empty = no banner, no tracking.
   var GA_ID = 'G-V7XNEPYZM1';
+  // true = ask first (cookie banner). false = load Google Analytics for every visitor, no banner.
+  // TEMPORARILY false at the owner's request; switch back to true when asked.
+  var CONSENT_REQUIRED = false;
   // On unknown *.wacns.com hosts (which show the 404 page) site links must point back to wacns.com
   var BASE = (/\.wacns\.com$/.test(location.hostname) && location.hostname !== 'www.wacns.com') ? 'https://wacns.com' : '';
 
@@ -379,6 +382,11 @@
       settings.addEventListener('click', function () { banner.hidden = false; var first = $('button', banner); if (first) first.focus(); });
     }
 
+    if (!CONSENT_REQUIRED) {
+      if (settings) settings.hidden = true;
+      loadGA();
+      return;
+    }
     var saved = store(KEY);
     if (saved === 'granted') loadGA();
     else if (saved !== 'denied') banner.hidden = false;

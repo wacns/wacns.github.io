@@ -579,6 +579,18 @@ def uses_page():
         '<h1>Uses</h1>\n      <p class="lede">The languages, data stores and tools I reach for when I build things.</p>',
         body.rstrip("\n"), og_image="/uses/og.png")
 
+# Must match CONSENT_REQUIRED in assets/site.js
+CONSENT_REQUIRED = False
+
+GA_WITH_CONSENT = """      <h2>Only if you allow it</h2>
+      <p><strong>Google Analytics</strong> shows me which pages are useful and how people find them. It sets cookies (<code>_ga</code>, <code>_ga_*</code>) and Google processes the data under its own privacy policy. It doesn\u2019t load at all unless you choose <em>Allow</em> in the cookie banner.</p>
+      <p>You can change your mind any time with <em>Cookie settings</em> at the bottom of every page. Choosing <em>No thanks</em> stops it and removes its cookies.</p>
+"""
+GA_WITHOUT_CONSENT = """      <h2>Google Analytics</h2>
+      <p><strong>Google Analytics</strong> shows me which pages are useful and how people find them. It sets cookies (<code>_ga</code>, <code>_ga_*</code>) and Google processes the data under its own privacy policy. It currently runs for every visitor.</p>
+      <p>To opt out, block cookies for this site in your browser, use a content blocker, or install Google\u2019s <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">Analytics opt-out add-on</a>.</p>
+"""
+
 def privacy_page():
     body = """      <p>Short version: this is a personal site. I don\u2019t run ads, sell data or build profiles of anyone. Here\u2019s exactly what happens when you visit.</p>
 
@@ -589,15 +601,13 @@ def privacy_page():
         <li><strong>GitHub</strong>: the project stats and activity graph are loaded by your browser from GitHub\u2019s public API and a contributions service, which see your IP address like any website you load.</li>
       </ul>
 
-      <h2>Only if you allow it</h2>
-      <p><strong>Google Analytics</strong> shows me which pages are useful and how people find them. It sets cookies (<code>_ga</code>, <code>_ga_*</code>) and Google processes the data under its own privacy policy. It doesn\u2019t load at all unless you choose <em>Allow</em> in the cookie banner.</p>
-      <p>You can change your mind any time with <em>Cookie settings</em> at the bottom of every page. Choosing <em>No thanks</em> stops it and removes its cookies.</p>
-
+{GA_SECTION}
       <h2>Stored in your browser only</h2>
-      <p>Your theme, intro length and cookie choice are saved in your browser\u2019s local storage so the site remembers them. They never leave your device.</p>
+      <p>Your theme, intro length and (when asked) cookie choice are saved in your browser\u2019s local storage so the site remembers them. They never leave your device.</p>
 
       <h2>Contact</h2>
       <p>Questions about any of this: message me on <a href="https://www.linkedin.com/in/abdullah-mohammed-137928219" target="_blank" rel="noopener">LinkedIn</a>.</p>"""
+    body = body.replace("{GA_SECTION}", GA_WITH_CONSENT if CONSENT_REQUIRED else GA_WITHOUT_CONSENT)
     article_page("/privacy/", "Privacy", "What this site collects, and what it doesn\u2019t.",
         '<a href="/">Home</a> / Privacy',
         '<h1>Privacy</h1>\n      <p class="page-meta">Last updated <time datetime="2026-10-24">Oct 24, 2026</time></p>',
