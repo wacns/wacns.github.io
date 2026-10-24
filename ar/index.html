@@ -36,7 +36,7 @@
         <a href="#now" class="opt">الآن</a>
         <a href="#projects">المشاريع</a>
         <a href="#activity" class="opt">النشاط</a>
-        <a href="#notes">الملاحظات</a>
+        <a href="#til">تعلّمت</a>
         <a href="#about">نبذة</a>
         </nav>
         <button type="button" class="icon-btn" id="paletteBtn" aria-label="البحث والأوامر" aria-haspopup="dialog">
@@ -126,20 +126,24 @@
       </div>
     </section></div>
 
-    <div class="band"><section class="wrap reveal" id="notes" aria-labelledby="notes-heading">
+    <div class="band"><section class="wrap reveal" id="til" aria-labelledby="til-heading">
       <div class="section-head">
-        <h2 id="notes-heading">الملاحظات</h2>
-        <a class="more-link" href="/notes/">كل الملاحظات ←</a>
+        <h2 id="til-heading">تعلّمت اليوم</h2>
+        <a class="more-link" href="/til/">كل التدوينات ←</a>
       </div>
-      <p class="notes-lang">الملاحظات مكتوبة بالإنجليزية.</p>
+      <p class="notes-lang">التدوينات مكتوبة بالإنجليزية.</p>
       <ul class="note-list">
-        <li lang="en" dir="ltr"><a href="/notes/subdomain-404-worker/">
+        <li lang="en" dir="ltr"><a href="/til/bdi-rtl/">
           <time class="note-date" datetime="2026-10-24">Oct 24, 2026</time>
-          <span><span class="note-title">A 404 page for every subdomain that doesn’t exist</span><span class="note-sum">Wildcard DNS, a wildcard Worker route and a hostname check, while keeping my existing apps completely untouched.</span></span>
+          <span><span class="note-title">&lt;bdi&gt; stops .NET from turning into NET. in Arabic text</span><span class="note-sum">Why Latin terms with punctuation flip inside right-to-left text, and the one-element fix.</span></span>
         </a></li>
-        <li lang="en" dir="ltr"><a href="/notes/git-folder-exposed/">
+        <li lang="en" dir="ltr"><a href="/til/worker-subdomain-catch-all/">
+          <time class="note-date" datetime="2026-10-24">Oct 24, 2026</time>
+          <span><span class="note-title">One Worker, one site, and a 404 for every unknown subdomain</span><span class="note-sum">Wildcard DNS, routes with no Worker attached, and run_worker_first.</span></span>
+        </a></li>
+        <li lang="en" dir="ltr"><a href="/til/assetsignore/">
           <time class="note-date" datetime="2026-10-23">Oct 23, 2026</time>
-          <span><span class="note-title">My static site was serving its own .git folder</span><span class="note-sum">Cloudflare analytics showed scanners getting a 200 for /.git/HEAD. Why it happened and the one-file fix.</span></span>
+          <span><span class="note-title">.assetsignore decides what a Cloudflare Worker publishes</span><span class="note-sum">Everything in the assets directory goes live, dot-folders included. One file controls it.</span></span>
         </a></li>
       </ul>
     </section></div>
@@ -187,7 +191,7 @@
           <h3>الموقع</h3>
           <ul>
             <li><a href="/ar/#projects">المشاريع</a></li>
-            <li><a href="/notes/">الملاحظات</a></li>
+            <li><a href="/til/">تعلّمت اليوم</a></li>
             <li><a href="/uses/">أدواتي</a></li>
             <li><a href="/" lang="en" hreflang="en">English</a></li>
           </ul>

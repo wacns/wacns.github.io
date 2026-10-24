@@ -13,15 +13,19 @@
     <xhtml:link rel="alternate" hreflang="ar" href="https://wacns.com/ar/"/>
   </url>
   <url>
-    <loc>https://wacns.com/notes/</loc>
+    <loc>https://wacns.com/til/</loc>
     <lastmod>2026-10-24</lastmod>
   </url>
   <url>
-    <loc>https://wacns.com/notes/subdomain-404-worker/</loc>
+    <loc>https://wacns.com/til/bdi-rtl/</loc>
     <lastmod>2026-10-24</lastmod>
   </url>
   <url>
-    <loc>https://wacns.com/notes/git-folder-exposed/</loc>
+    <loc>https://wacns.com/til/worker-subdomain-catch-all/</loc>
+    <lastmod>2026-10-24</lastmod>
+  </url>
+  <url>
+    <loc>https://wacns.com/til/assetsignore/</loc>
     <lastmod>2026-10-24</lastmod>
   </url>
   <url>

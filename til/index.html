@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Notes — wacns</title>
-  <meta name="description" content="Short write-ups on backend problems I’ve run into, how I diagnosed them and what fixed them.">
+  <title>Today I Learned — wacns</title>
+  <meta name="description" content="Short notes on things I’ve picked up while building, one idea per entry.">
   <meta name="theme-color" content="#0a0a0f">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="canonical" href="https://wacns.com/notes/">
+  <link rel="canonical" href="https://wacns.com/til/">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://wacns.com/notes/">
-  <meta property="og:title" content="Notes — wacns">
-  <meta property="og:description" content="Short write-ups on backend problems I’ve run into, how I diagnosed them and what fixed them.">
+  <meta property="og:url" content="https://wacns.com/til/">
+  <meta property="og:title" content="Today I Learned — wacns">
+  <meta property="og:description" content="Short notes on things I’ve picked up while building, one idea per entry.">
   <meta property="og:image" content="https://wacns.com/og.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -30,7 +30,7 @@
       <a class="brand" href="/"><img src="/favicon.svg" alt="">wacns</a>
       <div class="topbar-right">
         <nav class="topnav" aria-label="Sections">
-        <a href="/notes/">Notes</a>
+        <a href="/til/">TIL</a>
         <a href="/uses/">Uses</a>
         </nav>
         <button type="button" class="icon-btn" id="paletteBtn" aria-label="Search and commands" aria-haspopup="dialog">
@@ -47,19 +47,23 @@
 
   <main id="content">
     <div class="wrap page-head">
-      <p class="crumbs"><a href="/">Home</a> / Notes</p>
-      <h1>Notes</h1>
-      <p class="lede">Short write-ups on problems I’ve run into, how I diagnosed them and what fixed them.</p>
+      <p class="crumbs"><a href="/">Home</a> / TIL</p>
+      <h1>Today I Learned</h1>
+      <p class="lede">Short notes on things I’ve picked up while building. One idea per entry, written down so I don’t have to learn it twice.</p>
     </div>
     <article class="wrap prose">
       <ul class="note-list">
-        <li><a href="/notes/subdomain-404-worker/">
+        <li><a href="/til/bdi-rtl/">
           <time class="note-date" datetime="2026-10-24">Oct 24, 2026</time>
-          <span><span class="note-title">A 404 page for every subdomain that doesn’t exist</span><span class="note-sum">Wildcard DNS, a wildcard Worker route and a hostname check, while keeping my existing apps completely untouched.</span></span>
+          <span><span class="note-title">&lt;bdi&gt; stops .NET from turning into NET. in Arabic text</span><span class="note-sum">Why Latin terms with punctuation flip inside right-to-left text, and the one-element fix.</span></span>
         </a></li>
-        <li><a href="/notes/git-folder-exposed/">
+        <li><a href="/til/worker-subdomain-catch-all/">
+          <time class="note-date" datetime="2026-10-24">Oct 24, 2026</time>
+          <span><span class="note-title">One Worker, one site, and a 404 for every unknown subdomain</span><span class="note-sum">Wildcard DNS, routes with no Worker attached, and run_worker_first.</span></span>
+        </a></li>
+        <li><a href="/til/assetsignore/">
           <time class="note-date" datetime="2026-10-23">Oct 23, 2026</time>
-          <span><span class="note-title">My static site was serving its own .git folder</span><span class="note-sum">Cloudflare analytics showed scanners getting a 200 for /.git/HEAD. Why it happened and the one-file fix.</span></span>
+          <span><span class="note-title">.assetsignore decides what a Cloudflare Worker publishes</span><span class="note-sum">Everything in the assets directory goes live, dot-folders included. One file controls it.</span></span>
         </a></li>
       </ul>
     </article>
@@ -76,7 +80,7 @@
           <h3>Site</h3>
           <ul>
             <li><a href="/#projects">Projects</a></li>
-            <li><a href="/notes/">Notes</a></li>
+            <li><a href="/til/">TIL</a></li>
             <li><a href="/uses/">Uses</a></li>
             <li><a href="/ar/" lang="ar" hreflang="ar">العربية</a></li>
           </ul>

@@ -18,7 +18,7 @@ Plain HTML/CSS/JS. No package manager, no framework, no build step on deploy.
 | Path | What it is |
 |---|---|
 | `index.html`, `ar/index.html` | Homepage in English and Arabic (RTL) |
-| `notes/` | Notes index and one folder per note |
+| `til/` | "Today I learned" index and one folder per entry |
 | `uses/` | Tools/stack page |
 | `assets/site.css`, `assets/site.js` | Shared styles (dark + light themes) and behaviour (theme toggle, Ctrl+K palette, intro toggle, live GitHub stats, activity heatmap, colophon) |
 | `tools/build_pages.py` | Generator for the shared-layout pages above (see below) |
@@ -32,7 +32,7 @@ Plain HTML/CSS/JS. No package manager, no framework, no build step on deploy.
 
 ### Editing pages
 
-`index.html`, `ar/index.html`, `notes/**` and `uses/index.html` are **generated** by `tools/build_pages.py`.
+`index.html`, `ar/index.html`, `til/**` and `uses/index.html` are **generated** by `tools/build_pages.py`.
 Edit the content in that script, then run from the repo root:
 
 ```
@@ -40,7 +40,7 @@ python3 tools/build_pages.py .
 ```
 
 …and commit the regenerated HTML. Editing the generated HTML directly works too, but the next regeneration overwrites it.
-When adding a note: add it to `NOTES` in the script **and** in `assets/site.js` (palette list), and to `sitemap.xml`.
+When adding a TIL entry: add it to `NOTES` in the script (plus a `til_*` page function), **and** to `NOTES` in `assets/site.js` (palette list), and to `sitemap.xml`. Keep entries framed as something learned, not as incident reports.
 
 ### Content rules (from the site owner)
 
@@ -53,7 +53,7 @@ When adding a note: add it to `NOTES` in the script **and** in `assets/site.js` 
 `.htmlvalidate.json` holds the html-validate config. Before committing, run:
 
 ```
-npx html-validate index.html ar/index.html notes/index.html notes/*/index.html uses/index.html 404.html stremio/index.html
+npx html-validate index.html ar/index.html til/index.html til/*/index.html uses/index.html 404.html stremio/index.html
 ```
 
 The CSP in `_headers` only allows scripts from self + Cloudflare Insights, styles/fonts from Google Fonts,

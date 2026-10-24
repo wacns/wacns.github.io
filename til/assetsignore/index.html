@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>My static site was serving its own .git folder — wacns</title>
-  <meta name="description" content="Cloudflare analytics showed scanners getting a 200 for /.git/HEAD. Why it happened and the one-file fix.">
+  <title>.assetsignore decides what a Cloudflare Worker publishes — wacns</title>
+  <meta name="description" content="Everything in the assets directory goes live, dot-folders included. One file controls it.">
   <meta name="theme-color" content="#0a0a0f">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="canonical" href="https://wacns.com/notes/git-folder-exposed/">
+  <link rel="canonical" href="https://wacns.com/til/assetsignore/">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://wacns.com/notes/git-folder-exposed/">
-  <meta property="og:title" content="My static site was serving its own .git folder — wacns">
-  <meta property="og:description" content="Cloudflare analytics showed scanners getting a 200 for /.git/HEAD. Why it happened and the one-file fix.">
+  <meta property="og:url" content="https://wacns.com/til/assetsignore/">
+  <meta property="og:title" content=".assetsignore decides what a Cloudflare Worker publishes — wacns">
+  <meta property="og:description" content="Everything in the assets directory goes live, dot-folders included. One file controls it.">
   <meta property="og:image" content="https://wacns.com/og.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -22,7 +22,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/site.css">
   <script type="application/ld+json">
-  {"@context": "https://schema.org", "@type": "BlogPosting", "headline": "My static site was serving its own .git folder", "description": "Cloudflare analytics showed scanners getting a 200 for /.git/HEAD. Why it happened and the one-file fix.", "datePublished": "2026-10-23", "url": "https://wacns.com/notes/git-folder-exposed/", "author": {"@type": "Person", "name": "Abdullah", "alternateName": "wacns", "url": "https://wacns.com/"}}
+  {"@context": "https://schema.org", "@type": "BlogPosting", "headline": ".assetsignore decides what a Cloudflare Worker publishes", "description": "Everything in the assets directory goes live, dot-folders included. One file controls it.", "datePublished": "2026-10-23", "url": "https://wacns.com/til/assetsignore/", "author": {"@type": "Person", "name": "Abdullah", "alternateName": "wacns", "url": "https://wacns.com/"}}
   </script>
 </head>
 <body>
@@ -33,7 +33,7 @@
       <a class="brand" href="/"><img src="/favicon.svg" alt="">wacns</a>
       <div class="topbar-right">
         <nav class="topnav" aria-label="Sections">
-        <a href="/notes/">Notes</a>
+        <a href="/til/">TIL</a>
         <a href="/uses/">Uses</a>
         </nav>
         <button type="button" class="icon-btn" id="paletteBtn" aria-label="Search and commands" aria-haspopup="dialog">
@@ -50,30 +50,19 @@
 
   <main id="content">
     <div class="wrap page-head">
-      <p class="crumbs"><a href="/">Home</a> / <a href="/notes/">Notes</a></p>
-      <h1>My static site was serving its own .git folder</h1>
-      <p class="page-meta"><time datetime="2026-10-23">Oct 23, 2026</time> · 3 min read</p>
+      <p class="crumbs"><a href="/">Home</a> / <a href="/til/">TIL</a></p>
+      <h1>.assetsignore decides what a Cloudflare Worker publishes</h1>
+      <p class="page-meta"><time datetime="2026-10-23">Oct 23, 2026</time> · 2 min read</p>
     </div>
     <article class="wrap prose">
-      <p>The day after pointing my domain at a Cloudflare Worker, I opened Cloudflare’s security analytics to see where a few hundred requests had come from. I hadn’t shared the site with anyone yet.</p>
-      <p>Most of it was the usual background noise of the internet: bots asking for <code>/.env</code>, <code>/aws.env</code>, <code>/appsettings.Production.json</code>, <code>/.svn/wc.db</code> and dozens of other places secrets tend to leak from. Nearly all of them got a 404. Then one line stood out:</p>
-      <div class="callout"><strong>GET /.git/HEAD → 200</strong></div>
+      <p>Cloudflare Workers can serve a static site straight from a repository. What I hadn’t realised: <strong>every file in the assets directory gets published</strong>, including dot-folders like <code>.git</code> and anything else sitting in the repo, such as internal docs or tooling.</p>
+      <p>That matters most for plain HTML repos with no build step. If Wrangler generates the config for you, it points the assets directory at <code>.</code>, the whole checkout.</p>
 
-      <h2>What was exposed</h2>
-      <p>I requested it myself. <code>/.git/HEAD</code> returned the hash of my latest commit, and <code>/.git/config</code> returned the repository’s remote URL. That’s enough for off-the-shelf tools to walk the <code>.git</code> folder and rebuild the entire repository, history included.</p>
-
-      <h2>Why it happened</h2>
-      <p>The site is a plain HTML repository with no build step. Cloudflare’s Git integration clones the repo and runs <code>npx wrangler deploy</code>. With no config file in the repo, Wrangler detected a static site and generated its own config with the assets directory set to <code>.</code>, meaning the whole checkout.</p>
-      <p>Nothing in that path skips dot-folders, so <code>.git</code> was uploaded and served like any other file, along with tooling files such as my editor notes.</p>
-
-      <h2>How bad was it?</h2>
-      <p>In my case, not very: the repository is already public on GitHub, so nothing leaked that wasn’t already visible. But the same setup with a private repo would publish the full source and every secret that was ever committed to its history, to anyone who asks.</p>
-
-      <h2>The fix</h2>
-      <p>Workers static assets support an <code>.assetsignore</code> file in the assets directory, using the same syntax as <code>.gitignore</code>. Anything listed there is never uploaded:</p>
+      <h2>The fix: <code>.assetsignore</code></h2>
+      <p>Put a file named <code>.assetsignore</code> in the root of the assets directory. It uses the same pattern syntax as <code>.gitignore</code>, and anything it matches is never uploaded:</p>
       <div class="code-card">
         <div class="code-bar" aria-hidden="true"><i></i><i></i><i></i><span>.assetsignore</span></div>
-<pre><code><span class="tk-cm"># Files the Worker must never serve</span>
+<pre><code><span class="tk-cm"># Never upload these as public assets</span>
 .git
 .git/**
 .claude
@@ -81,17 +70,19 @@
 CLAUDE.md
 wrangler.jsonc
 worker.js
-.gitignore
+tools
+tools/**
 .assetsignore</code></pre>
       </div>
-      <p>After the next deploy, <code>/.git/HEAD</code>, <code>/.git/config</code> and the tooling files all return 404, while every real page and asset still loads.</p>
 
-      <h2>What I took from it</h2>
-      <ul>
-        <li><strong>Check what your deploy actually uploads,</strong> not what you think it uploads. Auto-generated configs are convenient and generous.</li>
-        <li><strong>Scanners find you within hours,</strong> not weeks. New TLS certificates are published in public logs, and bots watch them.</li>
-        <li><strong>A 200 on a path you never created is an alert.</strong> Skimming the status codes in your analytics once in a while is cheap insurance.</li>
-      </ul>
+      <h2>A ten-second check after any deploy</h2>
+      <p>Ask for something that should never be public and make sure it 404s:</p>
+      <div class="code-card">
+        <div class="code-bar" aria-hidden="true"><i></i><i></i><i></i><span>terminal</span></div>
+<pre><code><span class="tk-cm">$ </span>curl -sI https://example.com/.git/HEAD | head -1
+<span class="tk-str">HTTP/2 404</span></code></pre>
+      </div>
+      <p>Worth doing whenever a deploy tool picks the defaults for you. Generated configs are convenient, and generous about what they include.</p>
     </article>
   </main>
 
@@ -106,7 +97,7 @@ worker.js
           <h3>Site</h3>
           <ul>
             <li><a href="/#projects">Projects</a></li>
-            <li><a href="/notes/">Notes</a></li>
+            <li><a href="/til/">TIL</a></li>
             <li><a href="/uses/">Uses</a></li>
             <li><a href="/ar/" lang="ar" hreflang="ar">العربية</a></li>
           </ul>

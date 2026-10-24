@@ -66,7 +66,7 @@
         <a href="#now" class="opt">Now</a>
         <a href="#projects">Projects</a>
         <a href="#activity" class="opt">Activity</a>
-        <a href="#notes">Notes</a>
+        <a href="#til">TIL</a>
         <a href="#about">About</a>
         </nav>
         <button type="button" class="icon-btn" id="paletteBtn" aria-label="Search and commands" aria-haspopup="dialog">
@@ -156,20 +156,24 @@
       </div>
     </section></div>
 
-    <div class="band"><section class="wrap reveal" id="notes" aria-labelledby="notes-heading">
+    <div class="band"><section class="wrap reveal" id="til" aria-labelledby="til-heading">
       <div class="section-head">
-        <h2 id="notes-heading">Notes</h2>
-        <a class="more-link" href="/notes/">All notes →</a>
+        <h2 id="til-heading">Today I learned</h2>
+        <a class="more-link" href="/til/">All entries →</a>
       </div>
 
       <ul class="note-list">
-        <li><a href="/notes/subdomain-404-worker/">
+        <li><a href="/til/bdi-rtl/">
           <time class="note-date" datetime="2026-10-24">Oct 24, 2026</time>
-          <span><span class="note-title">A 404 page for every subdomain that doesn’t exist</span><span class="note-sum">Wildcard DNS, a wildcard Worker route and a hostname check, while keeping my existing apps completely untouched.</span></span>
+          <span><span class="note-title">&lt;bdi&gt; stops .NET from turning into NET. in Arabic text</span><span class="note-sum">Why Latin terms with punctuation flip inside right-to-left text, and the one-element fix.</span></span>
         </a></li>
-        <li><a href="/notes/git-folder-exposed/">
+        <li><a href="/til/worker-subdomain-catch-all/">
+          <time class="note-date" datetime="2026-10-24">Oct 24, 2026</time>
+          <span><span class="note-title">One Worker, one site, and a 404 for every unknown subdomain</span><span class="note-sum">Wildcard DNS, routes with no Worker attached, and run_worker_first.</span></span>
+        </a></li>
+        <li><a href="/til/assetsignore/">
           <time class="note-date" datetime="2026-10-23">Oct 23, 2026</time>
-          <span><span class="note-title">My static site was serving its own .git folder</span><span class="note-sum">Cloudflare analytics showed scanners getting a 200 for /.git/HEAD. Why it happened and the one-file fix.</span></span>
+          <span><span class="note-title">.assetsignore decides what a Cloudflare Worker publishes</span><span class="note-sum">Everything in the assets directory goes live, dot-folders included. One file controls it.</span></span>
         </a></li>
       </ul>
     </section></div>
@@ -217,7 +221,7 @@
           <h3>Site</h3>
           <ul>
             <li><a href="/#projects">Projects</a></li>
-            <li><a href="/notes/">Notes</a></li>
+            <li><a href="/til/">TIL</a></li>
             <li><a href="/uses/">Uses</a></li>
             <li><a href="/ar/" lang="ar" hreflang="ar">العربية</a></li>
           </ul>

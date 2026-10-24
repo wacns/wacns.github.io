@@ -9,24 +9,25 @@
   var GITHUB = 'https://github.com/wacns';
   var HOUR = 3600000;
 
-  // Notes listed in the command palette (newest first)
+  // TIL entries listed in the command palette (newest first)
   var NOTES = [
-    { title: 'A 404 page for every subdomain that doesn’t exist', url: '/notes/subdomain-404-worker/' },
-    { title: 'My static site was serving its own .git folder', url: '/notes/git-folder-exposed/' }
+    { title: '<bdi> stops .NET from turning into NET. in Arabic text', url: '/til/bdi-rtl/' },
+    { title: 'One Worker, one site, and a 404 for every unknown subdomain', url: '/til/worker-subdomain-catch-all/' },
+    { title: '.assetsignore decides what a Cloudflare Worker publishes', url: '/til/assetsignore/' }
   ];
 
   var T = AR ? {
     updated: 'آخر تحديث', contribOn: function (n, d) { return n + ' مساهمة في ' + d; },
-    pages: 'الصفحات', sections: 'الأقسام', notes: 'الملاحظات', actions: 'إجراءات', links: 'روابط',
-    home: 'الرئيسية', notesIndex: 'كل الملاحظات', uses: 'أدواتي',
+    pages: 'الصفحات', sections: 'الأقسام', notes: 'تعلّمت اليوم', actions: 'إجراءات', links: 'روابط',
+    home: 'الرئيسية', notesIndex: 'كل التدوينات', uses: 'أدواتي',
     themeToLight: 'التبديل إلى الوضع الفاتح', themeToDark: 'التبديل إلى الوضع الداكن',
     language: 'English', copyLink: 'نسخ رابط الصفحة', copied: 'تم النسخ',
     search: 'اكتب أمرًا أو ابحث…', empty: 'لا توجد نتائج', navigate: 'تنقّل', open: 'فتح', close: 'إغلاق',
     deployed: 'آخر تحديث للموقع'
   } : {
     updated: 'Updated', contribOn: function (n, d) { return n + (n === 1 ? ' contribution on ' : ' contributions on ') + d; },
-    pages: 'Pages', sections: 'On this page', notes: 'Notes', actions: 'Actions', links: 'Links',
-    home: 'Home', notesIndex: 'All notes', uses: 'Uses',
+    pages: 'Pages', sections: 'On this page', notes: 'Today I learned', actions: 'Actions', links: 'Links',
+    home: 'Home', notesIndex: 'All TIL entries', uses: 'Uses',
     themeToLight: 'Switch to light theme', themeToDark: 'Switch to dark theme',
     language: 'العربية', copyLink: 'Copy page link', copied: 'Copied',
     search: 'Type a command or search…', empty: 'No results', navigate: 'navigate', open: 'open', close: 'close',
@@ -251,7 +252,7 @@
         items.push({ group: T.sections, label: a.textContent.trim(), run: function () { var t = document.getElementById(id.slice(1)); if (t) t.scrollIntoView(); history.replaceState(null, '', id); } });
       });
       items.push({ group: T.pages, label: T.home, hint: homePath, run: go(homePath) });
-      items.push({ group: T.pages, label: T.notesIndex, hint: '/notes/', run: go('/notes/') });
+      items.push({ group: T.pages, label: T.notesIndex, hint: '/til/', run: go('/til/') });
       items.push({ group: T.pages, label: T.uses, hint: '/uses/', run: go('/uses/') });
       NOTES.forEach(function (n) { items.push({ group: T.notes, label: n.title, run: go(n.url) }); });
       items.push({ group: T.actions, label: doc.getAttribute('data-theme') === 'light' ? T.themeToDark : T.themeToLight, run: toggleTheme });

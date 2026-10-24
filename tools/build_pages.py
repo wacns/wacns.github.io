@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generates the shared-layout pages of wacns.com (homepage EN/AR, notes, uses).
+"""Generates the shared-layout pages of wacns.com (homepage EN/AR, TIL, uses).
 
 Usage (from the repo root):  python3 tools/build_pages.py .
 The output is plain HTML that gets committed; there is no build step on deploy."""
@@ -20,11 +20,11 @@ THEME_BOOT = ("<script>(function(){var d=document.documentElement,t=null;d.class
 
 S = {
   "en": dict(skip="Skip to content", palette="Search and commands", theme="Switch theme", lang_label="العربية", lang_href="/ar/",
-             lang_aria="Read this page in Arabic", site="Site", elsewhere="Elsewhere", projects="Projects", notes="Notes",
+             lang_aria="Read this page in Arabic", site="Site", elsewhere="Elsewhere", projects="Projects", notes="TIL",
              uses="Uses", about_short="Backend developer in Manama, Bahrain.", colophon="Plain HTML &amp; CSS, served by Cloudflare Workers",
              home="Home", palette_label="Command palette"),
   "ar": dict(skip="انتقل إلى المحتوى", palette="البحث والأوامر", theme="تبديل المظهر", lang_label="EN", lang_href="/",
-             lang_aria="Read this page in English", site="الموقع", elsewhere="في مكان آخر", projects="المشاريع", notes="الملاحظات",
+             lang_aria="Read this page in English", site="الموقع", elsewhere="في مكان آخر", projects="المشاريع", notes="تعلّمت اليوم",
              uses="أدواتي", about_short="مطوّر أنظمة خلفية في المنامة، البحرين.", colophon="HTML و CSS بسيطة، تُقدَّم عبر Cloudflare Workers",
              home="الرئيسية", palette_label="لوحة الأوامر"),
 }
@@ -116,7 +116,7 @@ def footer(lang, home):
           <h3>{s['site']}</h3>
           <ul>
             <li><a href="{home}#projects">{s['projects']}</a></li>
-            <li><a href="/notes/">{s['notes']}</a></li>
+            <li><a href="/til/">{s['notes']}</a></li>
             <li><a href="/uses/">{s['uses']}</a></li>
             <li><a href="{s['lang_href']}" lang="{'en' if lang == 'ar' else 'ar'}" hreflang="{'en' if lang == 'ar' else 'ar'}">{'English' if lang == 'ar' else 'العربية'}</a></li>
           </ul>
@@ -183,22 +183,26 @@ def about_code(lang):
     ]
     return code_card("Abdullah.cs", "\n".join(lines))
 
-# ───────────────────────── Notes data
+# ───────────────────────── TIL entries (newest first)
 NOTES = [
-  dict(slug="subdomain-404-worker", date="2026-10-24", nice="Oct 24, 2026",
-       title="A 404 page for every subdomain that doesn’t exist",
-       summary="Wildcard DNS, a wildcard Worker route and a hostname check, while keeping my existing apps completely untouched."),
-  dict(slug="git-folder-exposed", date="2026-10-23", nice="Oct 23, 2026",
-       title="My static site was serving its own .git folder",
-       summary="Cloudflare analytics showed scanners getting a 200 for /.git/HEAD. Why it happened and the one-file fix."),
+  dict(slug="bdi-rtl", date="2026-10-24", nice="Oct 24, 2026",
+       title="<bdi> stops .NET from turning into NET. in Arabic text",
+       summary="Why Latin terms with punctuation flip inside right-to-left text, and the one-element fix."),
+  dict(slug="worker-subdomain-catch-all", date="2026-10-24", nice="Oct 24, 2026",
+       title="One Worker, one site, and a 404 for every unknown subdomain",
+       summary="Wildcard DNS, routes with no Worker attached, and run_worker_first."),
+  dict(slug="assetsignore", date="2026-10-23", nice="Oct 23, 2026",
+       title=".assetsignore decides what a Cloudflare Worker publishes",
+       summary="Everything in the assets directory goes live, dot-folders included. One file controls it."),
 ]
+TIL = {n["slug"]: n for n in NOTES}
 
 def notes_list(limit=None, lang="en"):
     items = NOTES[:limit] if limit else NOTES
     out = []
     for n in items:
         attr = ' lang="en" dir="ltr"' if lang == "ar" else ""
-        out.append(f"""        <li{attr}><a href="/notes/{n['slug']}/">
+        out.append(f"""        <li{attr}><a href="/til/{n['slug']}/">
           <time class="note-date" datetime="{n['date']}">{n['nice']}</time>
           <span><span class="note-title">{html.escape(n['title'])}</span><span class="note-sum">{html.escape(n['summary'])}</span></span>
         </a></li>""")
@@ -215,7 +219,7 @@ HOME = {
    long=['I’m Abdullah, a backend developer based in Manama, Bahrain. Most of my days are spent in C# and ASP.NET Core: designing APIs, <mark>tracking down the MySQL queries</mark> that slow down once real data piles up, and generating the Word and Excel reports people actually rely on.',
          'Outside of that I build my own things: a cross-platform finance app, automations that run on a schedule, and small services on Cloudflare Workers. Mostly to scratch an itch, and <mark>to learn something new</mark> along the way.'],
    see="See projects", stats=("contributions this year", "projects", "On GitHub since"), stats_label="At a glance",
-   nav=[("Now", "#now", True), ("Projects", "#projects", False), ("Activity", "#activity", True), ("Notes", "#notes", False), ("About", "#about", False)],
+   nav=[("Now", "#now", True), ("Projects", "#projects", False), ("Activity", "#activity", True), ("TIL", "#til", False), ("About", "#about", False)],
    now="Now", now_items=["Shipping FinancialAdvisor 1.7: an AI assistant with flexible funding options and a deeper budgeting toolkit.",
                          "Building small tools and dashboards on Cloudflare Workers for my own projects.",
                          "Rebuilding this site, one detail at a time."],
@@ -227,7 +231,7 @@ HOME = {
           ("wacns/AutoStore-WACNS", "AutoStore", "Discord storefront bot with products, stock, user balances and payment handling, all managed through slash commands.", ["Node.js", "discord.js", "MongoDB"])],
    activity="Activity", activity_total="contributions on GitHub in the last year", graph_label="GitHub contribution graph for the last year",
    less="Less", more="More",
-   notes="Notes", all_notes="All notes →", notes_note="",
+   notes="Today I learned", all_notes="All entries →", notes_note="",
    about="About",
    cta="Let’s build something.", cta_sub="Always happy to talk backend, APIs and integrations.", cta_btn="Message me on LinkedIn",
  ),
@@ -240,7 +244,7 @@ HOME = {
    long=['أنا عبدالله، مطوّر أنظمة خلفية مقيم في المنامة، البحرين. أقضي معظم وقتي مع <bdi>C#</bdi> و <bdi>ASP.NET Core</bdi>: أصمّم واجهات برمجية، <mark>وأتتبّع استعلامات MySQL</mark> التي تبطؤ مع تراكم البيانات الحقيقية، وأولّد تقارير Word و Excel يعتمد عليها الناس فعلًا.',
          'وخارج ذلك أبني مشاريعي الخاصة: تطبيق مالي يعمل على عدة منصّات، وأتمتة تعمل وفق جدول زمني، وخدمات صغيرة على Cloudflare Workers. غالبًا لأحلّ مشكلة تزعجني، <mark>ولأتعلّم شيئًا جديدًا</mark> في الطريق.'],
    see="شاهد المشاريع", stats=("مساهمة هذا العام", "مشاريع", "على GitHub منذ"), stats_label="نظرة سريعة",
-   nav=[("الآن", "#now", True), ("المشاريع", "#projects", False), ("النشاط", "#activity", True), ("الملاحظات", "#notes", False), ("نبذة", "#about", False)],
+   nav=[("الآن", "#now", True), ("المشاريع", "#projects", False), ("النشاط", "#activity", True), ("تعلّمت", "#til", False), ("نبذة", "#about", False)],
    now="الآن", now_items=["أطلق الإصدار 1.7 من FinancialAdvisor: مساعد ذكي بخيارات تمويل مرنة وأدوات ميزانية أعمق.",
                           "أبني أدوات ولوحات صغيرة على Cloudflare Workers لمشاريعي الخاصة.",
                           "أعيد بناء هذا الموقع، تفصيلةً تلو الأخرى."],
@@ -252,7 +256,7 @@ HOME = {
           ("wacns/AutoStore-WACNS", "AutoStore", "بوت متجر على Discord للمنتجات والمخزون وأرصدة المستخدمين ومعالجة المدفوعات، ويُدار بالكامل عبر أوامر الشَّرطة المائلة.", ["Node.js", "discord.js", "MongoDB"])],
    activity="النشاط", activity_total="مساهمة على GitHub خلال العام الماضي", graph_label="مخطط مساهمات GitHub خلال العام الماضي",
    less="أقل", more="أكثر",
-   notes="الملاحظات", all_notes="كل الملاحظات ←", notes_note='<p class="notes-lang">الملاحظات مكتوبة بالإنجليزية.</p>',
+   notes="تعلّمت اليوم", all_notes="كل التدوينات ←", notes_note='<p class="notes-lang">التدوينات مكتوبة بالإنجليزية.</p>',
    about="نبذة",
    cta="لنبنِ شيئًا معًا.", cta_sub="يسعدني دائمًا الحديث عن الأنظمة الخلفية والواجهات البرمجية والتكاملات.", cta_btn="راسلني على LinkedIn",
  ),
@@ -356,14 +360,14 @@ def homepage(lang):
       </div>
     </section></div>
 
-    <div class="band"><section class="wrap reveal" id="notes" aria-labelledby="notes-heading">
+    <div class="band"><section class="wrap reveal" id="til" aria-labelledby="til-heading">
       <div class="section-head">
-        <h2 id="notes-heading">{h['notes']}</h2>
-        <a class="more-link" href="/notes/">{h['all_notes']}</a>
+        <h2 id="til-heading">{h['notes']}</h2>
+        <a class="more-link" href="/til/">{h['all_notes']}</a>
       </div>
       {h['notes_note']}
       <ul class="note-list">
-{notes_list(2, lang)}
+{notes_list(3, lang)}
       </ul>
     </section></div>
 
@@ -393,7 +397,7 @@ def homepage(lang):
 
 # ───────────────────────── Notes pages
 def sub_nav(lang="en"):
-    return [("Notes", "/notes/", False), ("Uses", "/uses/", False)]
+    return [("TIL", "/til/", False), ("Uses", "/uses/", False)]
 
 def article_page(path, title, desc, crumbs, header_html, body_html, published=None):
     ld = ""
@@ -424,10 +428,10 @@ def article_page(path, title, desc, crumbs, header_html, body_html, published=No
 {TAIL}"""
     write(path + "index.html", page)
 
-def notes_index():
-    article_page("/notes/", "Notes", "Short write-ups on backend problems I’ve run into, how I diagnosed them and what fixed them.",
-        '<a href="/">Home</a> / Notes',
-        '<h1>Notes</h1>\n      <p class="lede">Short write-ups on problems I’ve run into, how I diagnosed them and what fixed them.</p>',
+def til_index():
+    article_page("/til/", "Today I Learned", "Short notes on things I’ve picked up while building, one idea per entry.",
+        '<a href="/">Home</a> / TIL',
+        '<h1>Today I Learned</h1>\n      <p class="lede">Short notes on things I’ve picked up while building. One idea per entry, written down so I don’t have to learn it twice.</p>',
         f'      <ul class="note-list">\n{notes_list()}\n      </ul>')
 
 def kw(t): return tk("kw", t)
@@ -436,108 +440,89 @@ def cm(t): return tk("cm", t)
 def pu(t): return tk("pu", t)
 def fn(t): return tk("fn", t)
 def pr(t): return tk("pr", t)
+def tg(t): return tk("kw", t)
 
-def note_git():
-    n = NOTES[1]
-    ignore = "\n".join([cm("# Files the Worker must never serve"), ".git", ".git/**", ".claude", ".claude/**", "CLAUDE.md",
-                        "wrangler.jsonc", "worker.js", ".gitignore", ".assetsignore"])
-    body = f"""      <p>The day after pointing my domain at a Cloudflare Worker, I opened Cloudflare’s security analytics to see where a few hundred requests had come from. I hadn’t shared the site with anyone yet.</p>
-      <p>Most of it was the usual background noise of the internet: bots asking for <code>/.env</code>, <code>/aws.env</code>, <code>/appsettings.Production.json</code>, <code>/.svn/wc.db</code> and dozens of other places secrets tend to leak from. Nearly all of them got a 404. Then one line stood out:</p>
-      <div class="callout"><strong>GET /.git/HEAD → 200</strong></div>
-
-      <h2>What was exposed</h2>
-      <p>I requested it myself. <code>/.git/HEAD</code> returned the hash of my latest commit, and <code>/.git/config</code> returned the repository’s remote URL. That’s enough for off-the-shelf tools to walk the <code>.git</code> folder and rebuild the entire repository, history included.</p>
-
-      <h2>Why it happened</h2>
-      <p>The site is a plain HTML repository with no build step. Cloudflare’s Git integration clones the repo and runs <code>npx wrangler deploy</code>. With no config file in the repo, Wrangler detected a static site and generated its own config with the assets directory set to <code>.</code>, meaning the whole checkout.</p>
-      <p>Nothing in that path skips dot-folders, so <code>.git</code> was uploaded and served like any other file, along with tooling files such as my editor notes.</p>
-
-      <h2>How bad was it?</h2>
-      <p>In my case, not very: the repository is already public on GitHub, so nothing leaked that wasn’t already visible. But the same setup with a private repo would publish the full source and every secret that was ever committed to its history, to anyone who asks.</p>
-
-      <h2>The fix</h2>
-      <p>Workers static assets support an <code>.assetsignore</code> file in the assets directory, using the same syntax as <code>.gitignore</code>. Anything listed there is never uploaded:</p>
-      {code_card(".assetsignore", chr(10).join(ignore.split(chr(10))))}
-      <p>After the next deploy, <code>/.git/HEAD</code>, <code>/.git/config</code> and the tooling files all return 404, while every real page and asset still loads.</p>
-
-      <h2>What I took from it</h2>
-      <ul>
-        <li><strong>Check what your deploy actually uploads,</strong> not what you think it uploads. Auto-generated configs are convenient and generous.</li>
-        <li><strong>Scanners find you within hours,</strong> not weeks. New TLS certificates are published in public logs, and bots watch them.</li>
-        <li><strong>A 200 on a path you never created is an alert.</strong> Skimming the status codes in your analytics once in a while is cheap insurance.</li>
-      </ul>"""
-    article_page(f"/notes/{n['slug']}/", n["title"], n["summary"],
-        '<a href="/">Home</a> / <a href="/notes/">Notes</a>',
-        f'<h1>{html.escape(n["title"])}</h1>\n      <p class="page-meta"><time datetime="{n["date"]}">{n["nice"]}</time> · 3 min read</p>',
+def til_entry(n, minutes, body):
+    article_page(f"/til/{n['slug']}/", n["title"], n["summary"],
+        '<a href="/">Home</a> / <a href="/til/">TIL</a>',
+        f'<h1>{html.escape(n["title"])}</h1>\n      <p class="page-meta"><time datetime="{n["date"]}">{n["nice"]}</time> · {minutes} min read</p>',
         body, published=n["date"])
 
-def note_404():
-    n = NOTES[0]
+def til_worker():
+    n = TIL["worker-subdomain-catch-all"]
     worker = "\n".join([
         f'{kw("const")} SITE_HOSTS {pu("=")} {kw("new")} {tk("ty","Set")}{pu("([")}{st(chr(34)+"example.com"+chr(34))}{pu(",")} {st(chr(34)+"www.example.com"+chr(34))}{pu("]);")}',
-        f'{kw("const")} APP_HOSTS  {pu("=")} {kw("new")} {tk("ty","Set")}{pu("([")}{st(chr(34)+"app.example.com"+chr(34))}{pu(",")} {st(chr(34)+"api.example.com"+chr(34))}{pu("]);")}',
+        f'{kw("const")} APP_HOSTS  {pu("=")} {kw("new")} {tk("ty","Set")}{pu("([")}{st(chr(34)+"app.example.com"+chr(34))}{pu("]);")}',
         "",
         f'{kw("export default")} {pu("{")}',
         f'  {kw("async")} {fn("fetch")}{pu("(")}request{pu(",")} env{pu(") {")}',
         f'    {kw("const")} host {pu("=")} {kw("new")} {tk("ty","URL")}{pu("(")}request{pu(".")}url{pu(").")}hostname{pu(";")}',
-        "",
-        f'    {cm("// The real site")}',
         f'    {kw("if")} {pu("(")}SITE_HOSTS{pu(".")}{fn("has")}{pu("(")}host{pu("))")} {kw("return")} env{pu(".")}ASSETS{pu(".")}{fn("fetch")}{pu("(")}request{pu(");")}',
+        f'    {kw("if")} {pu("(")}APP_HOSTS{pu(".")}{fn("has")}{pu("(")}host{pu("))")}  {kw("return")} {fn("fetch")}{pu("(")}request{pu(");")}  {cm("// safety net")}',
         "",
-        f'    {cm("// Safety net: apps are excluded by route, but pass them through just in case")}',
-        f'    {kw("if")} {pu("(")}APP_HOSTS{pu(".")}{fn("has")}{pu("(")}host{pu("))")} {kw("return")} {fn("fetch")}{pu("(")}request{pu(");")}',
-        "",
-        f'    {cm("// Everything else: the 404 page, with a real 404 status")}',
         f'    {kw("const")} page {pu("=")} {kw("await")} env{pu(".")}ASSETS{pu(".")}{fn("fetch")}{pu("(")}{kw("new")} {tk("ty","URL")}{pu("(")}{st(chr(34)+"/404.html"+chr(34))}{pu(",")} request{pu(".")}url{pu("));")}',
         f'    {kw("return")} {kw("new")} {tk("ty","Response")}{pu("(")}page{pu(".")}body{pu(", {")} status{pu(":")} {st("404")}{pu(",")} headers{pu(":")} page{pu(".")}headers {pu("});")}',
         f'  {pu("},")}',
         pu("};"),
     ])
-    cfg = "\n".join([
-        pu("{"),
-        f'  {st(chr(34)+"main"+chr(34))}{pu(":")} {st(chr(34)+"worker.js"+chr(34))}{pu(",")}',
-        f'  {st(chr(34)+"assets"+chr(34))}{pu(": {")}',
-        f'    {st(chr(34)+"directory"+chr(34))}{pu(":")} {st(chr(34)+"."+chr(34))}{pu(",")}',
-        f'    {st(chr(34)+"binding"+chr(34))}{pu(":")} {st(chr(34)+"ASSETS"+chr(34))}{pu(",")}',
-        f'    {st(chr(34)+"run_worker_first"+chr(34))}{pu(":")} {kw("true")}{pu(",")}',
-        f'    {st(chr(34)+"not_found_handling"+chr(34))}{pu(":")} {st(chr(34)+"404-page"+chr(34))}',
-        f'  {pu("}")}',
+    body = f"""      <p>I wanted any subdomain that doesn’t exist, like <code>hello.example.com</code>, to show my own 404 page instead of a “site can’t be reached” error, without touching the subdomains that already run real apps. Three Cloudflare details made it work.</p>
+
+      <h2>1. A wildcard record never beats a real one</h2>
+      <p>A proxied <code>AAAA</code> record for <code>*.example.com</code> pointing to <code>100::</code> (Cloudflare’s placeholder for “handled at the edge”) catches every name that has no record of its own. Explicit records always win, so existing subdomains resolve exactly as before.</p>
+
+      <h2>2. A route with no Worker is a valid route</h2>
+      <p>A Worker route <code>*.example.com/*</code> sends all those requests to one Worker. To keep an app out of it, add a more specific route like <code>app.example.com/*</code> and attach <em>no</em> Worker. The most specific route wins, so app traffic never reaches the Worker at all.</p>
+
+      <h2>3. A static-assets Worker can run code first</h2>
+      <p>Setting <code>run_worker_first: true</code> in <code>wrangler.jsonc</code> gives the script every request before the static files are served, so it can decide by hostname:</p>
+      {code_card("worker.js", worker)}
+      <p>One thing to remember: the catch-all is greedy. Every new app subdomain needs its own no-Worker route, or it gets the 404 page too.</p>"""
+    til_entry(n, 2, body)
+
+def til_assetsignore():
+    n = TIL["assetsignore"]
+    ignore = "\n".join([cm("# Never upload these as public assets"), ".git", ".git/**", ".claude", ".claude/**", "CLAUDE.md",
+                        "wrangler.jsonc", "worker.js", "tools", "tools/**", ".assetsignore"])
+    body = f"""      <p>Cloudflare Workers can serve a static site straight from a repository. What I hadn’t realised: <strong>every file in the assets directory gets published</strong>, including dot-folders like <code>.git</code> and anything else sitting in the repo, such as internal docs or tooling.</p>
+      <p>That matters most for plain HTML repos with no build step. If Wrangler generates the config for you, it points the assets directory at <code>.</code>, the whole checkout.</p>
+
+      <h2>The fix: <code>.assetsignore</code></h2>
+      <p>Put a file named <code>.assetsignore</code> in the root of the assets directory. It uses the same pattern syntax as <code>.gitignore</code>, and anything it matches is never uploaded:</p>
+      {code_card(".assetsignore", ignore)}
+
+      <h2>A ten-second check after any deploy</h2>
+      <p>Ask for something that should never be public and make sure it 404s:</p>
+      {code_card("terminal", cm("$ ") + "curl -sI https://example.com/.git/HEAD | head -1" + chr(10) + st("HTTP/2 404"))}
+      <p>Worth doing whenever a deploy tool picks the defaults for you. Generated configs are convenient, and generous about what they include.</p>"""
+    til_entry(n, 2, body)
+
+def til_bdi():
+    n = TIL["bdi-rtl"]
+    snippet = "\n".join([
+        f'{pu("<")}{tg("p")} {pr("dir")}{pu("=")}{st(chr(34)+"rtl"+chr(34))}{pu(">")}',
+        f'  أبني أنظمة خلفية باستخدام {pu("<")}{tg("bdi")}{pu(">")}.NET{pu("</")}{tg("bdi")}{pu(">")} و {pu("<")}{tg("bdi")}{pu(">")}C#{pu("</")}{tg("bdi")}{pu(">")}',
+        f'{pu("</")}{tg("p")}{pu(">")}',
+    ])
+    css = "\n".join([
+        f'{tk("ty","html")}{pu("[")}{pr("dir")}{pu("=")}{st(chr(34)+"rtl"+chr(34))}{pu("]")} {tk("ty","bdi")} {pu("{")}',
+        f'  {pr("direction")}{pu(":")} ltr{pu(";")}',
+        f'  {pr("unicode-bidi")}{pu(":")} isolate{pu(";")}',
         pu("}"),
     ])
-    body = f"""      <p>Type a random subdomain of most personal domains, say <code>hello.example.com</code>, and the browser says the site can’t be reached. There’s no DNS record, so the request never gets anywhere.</p>
-      <p>I wanted those visits to land on my own 404 page instead. The catch: a few subdomains on my domain already run real apps through a Cloudflare Tunnel, and those had to stay exactly as they were.</p>
+    body = f"""      <p>While building the Arabic version of this site, a sentence that mentions <code>.NET</code> and <code>C#</code> came out as <strong>NET.</strong> and <strong>#C</strong>. Nothing was wrong with the text itself. It was the Unicode bidirectional algorithm doing exactly what it’s designed to do.</p>
 
-      <h2>The four pieces</h2>
-      <ol>
-        <li><strong>A wildcard DNS record.</strong> A proxied <code>AAAA</code> record for <code>*.example.com</code> pointing to <code>100::</code>, Cloudflare’s placeholder for “handled at the edge”. Explicit records always win over a wildcard, so existing subdomains keep resolving where they did.</li>
-        <li><strong>A wildcard Worker route.</strong> <code>*.example.com/*</code> sends every subdomain request to the site’s Worker.</li>
-        <li><strong>An exclusion route per app.</strong> Routes like <code>app.example.com/*</code> with <em>no</em> Worker attached. The most specific route wins, so app traffic never touches my Worker at all.</li>
-        <li><strong>A hostname check in the Worker.</strong> The main domain gets the site, anything else gets the 404 page.</li>
-      </ol>
+      <h2>Why it happens</h2>
+      <p>In a right-to-left paragraph, letters like <code>N</code> are strongly left-to-right, but punctuation such as <code>.</code> and <code>#</code> has no strong direction of its own. When a neutral character sits at the edge of a Latin word, it takes the paragraph’s direction, so it gets drawn on the “wrong” side of the word.</p>
 
-      <h2>The Worker</h2>
-      <p>The site is otherwise static, so the Worker is tiny. It runs before the static assets so it can decide by hostname:</p>
-      {code_card("worker.js", worker)}
-      <p>And the matching bits of the Wrangler config. <code>run_worker_first</code> makes the script see every request, and <code>not_found_handling</code> covers missing paths on the main domain:</p>
-      {code_card("wrangler.jsonc", cfg)}
+      <h2>The fix: isolate the term</h2>
+      <p><code>&lt;bdi&gt;</code> (bidirectional isolate) lays its content out on its own, and the surrounding text treats it as a single unit:</p>
+      {code_card("index.html", snippet)}
+      <p><code>&lt;bdi&gt;</code> guesses the direction from the first strong character, which is right for <code>.NET</code>. To make it explicit for every term, including ones that start with a digit, I also force left-to-right in CSS:</p>
+      {code_card("site.css", css)}
 
-      <h2>HTTPS everywhere, while I was there</h2>
-      <p>With every subdomain now answering, I also turned on Cloudflare’s <em>Always Use HTTPS</em> and sent an HSTS header with <code>includeSubDomains</code>, so browsers stop trying plain HTTP anywhere on the domain.</p>
-
-      <h2>Testing it</h2>
-      <ul>
-        <li><code>http://random-test-123.example.com/hello</code> redirected to HTTPS and showed the 404 page with a 404 status.</li>
-        <li>Each app subdomain still went straight to its own login screen.</li>
-        <li>The main site and <code>www</code> were unchanged.</li>
-      </ul>
-
-      <h2>The one gotcha</h2>
-      <blockquote>The catch-all is greedy. When I add a new app subdomain, it gets the 404 page until I add its exclusion route.</blockquote>
-      <p>That’s why the Worker keeps a list of app hostnames as a safety net, and why “add the exclusion route” is now part of my checklist for every new subdomain.</p>"""
-    article_page(f"/notes/{n['slug']}/", n["title"], n["summary"],
-        '<a href="/">Home</a> / <a href="/notes/">Notes</a>',
-        f'<h1>{html.escape(n["title"])}</h1>\n      <p class="page-meta"><time datetime="{n["date"]}">{n["nice"]}</time> · 4 min read</p>',
-        body, published=n["date"])
+      <h2>Related: keep code blocks left-to-right</h2>
+      <p>On an RTL page, code blocks inherit the right-to-left direction too, so brackets and comment markers get mirrored. Setting <code>direction: ltr</code> on code containers keeps them reading like code.</p>"""
+    til_entry(n, 2, body)
 
 def uses_page():
     groups = [
@@ -570,7 +555,8 @@ def uses_page():
 
 homepage("en")
 homepage("ar")
-notes_index()
-note_git()
-note_404()
+til_index()
+til_assetsignore()
+til_worker()
+til_bdi()
 uses_page()

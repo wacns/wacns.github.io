@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>A 404 page for every subdomain that doesn’t exist — wacns</title>
-  <meta name="description" content="Wildcard DNS, a wildcard Worker route and a hostname check, while keeping my existing apps completely untouched.">
+  <title>One Worker, one site, and a 404 for every unknown subdomain — wacns</title>
+  <meta name="description" content="Wildcard DNS, routes with no Worker attached, and run_worker_first.">
   <meta name="theme-color" content="#0a0a0f">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="canonical" href="https://wacns.com/notes/subdomain-404-worker/">
+  <link rel="canonical" href="https://wacns.com/til/worker-subdomain-catch-all/">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://wacns.com/notes/subdomain-404-worker/">
-  <meta property="og:title" content="A 404 page for every subdomain that doesn’t exist — wacns">
-  <meta property="og:description" content="Wildcard DNS, a wildcard Worker route and a hostname check, while keeping my existing apps completely untouched.">
+  <meta property="og:url" content="https://wacns.com/til/worker-subdomain-catch-all/">
+  <meta property="og:title" content="One Worker, one site, and a 404 for every unknown subdomain — wacns">
+  <meta property="og:description" content="Wildcard DNS, routes with no Worker attached, and run_worker_first.">
   <meta property="og:image" content="https://wacns.com/og.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -22,7 +22,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/site.css">
   <script type="application/ld+json">
-  {"@context": "https://schema.org", "@type": "BlogPosting", "headline": "A 404 page for every subdomain that doesn’t exist", "description": "Wildcard DNS, a wildcard Worker route and a hostname check, while keeping my existing apps completely untouched.", "datePublished": "2026-10-24", "url": "https://wacns.com/notes/subdomain-404-worker/", "author": {"@type": "Person", "name": "Abdullah", "alternateName": "wacns", "url": "https://wacns.com/"}}
+  {"@context": "https://schema.org", "@type": "BlogPosting", "headline": "One Worker, one site, and a 404 for every unknown subdomain", "description": "Wildcard DNS, routes with no Worker attached, and run_worker_first.", "datePublished": "2026-10-24", "url": "https://wacns.com/til/worker-subdomain-catch-all/", "author": {"@type": "Person", "name": "Abdullah", "alternateName": "wacns", "url": "https://wacns.com/"}}
   </script>
 </head>
 <body>
@@ -33,7 +33,7 @@
       <a class="brand" href="/"><img src="/favicon.svg" alt="">wacns</a>
       <div class="topbar-right">
         <nav class="topnav" aria-label="Sections">
-        <a href="/notes/">Notes</a>
+        <a href="/til/">TIL</a>
         <a href="/uses/">Uses</a>
         </nav>
         <button type="button" class="icon-btn" id="paletteBtn" aria-label="Search and commands" aria-haspopup="dialog">
@@ -50,72 +50,38 @@
 
   <main id="content">
     <div class="wrap page-head">
-      <p class="crumbs"><a href="/">Home</a> / <a href="/notes/">Notes</a></p>
-      <h1>A 404 page for every subdomain that doesn’t exist</h1>
-      <p class="page-meta"><time datetime="2026-10-24">Oct 24, 2026</time> · 4 min read</p>
+      <p class="crumbs"><a href="/">Home</a> / <a href="/til/">TIL</a></p>
+      <h1>One Worker, one site, and a 404 for every unknown subdomain</h1>
+      <p class="page-meta"><time datetime="2026-10-24">Oct 24, 2026</time> · 2 min read</p>
     </div>
     <article class="wrap prose">
-      <p>Type a random subdomain of most personal domains, say <code>hello.example.com</code>, and the browser says the site can’t be reached. There’s no DNS record, so the request never gets anywhere.</p>
-      <p>I wanted those visits to land on my own 404 page instead. The catch: a few subdomains on my domain already run real apps through a Cloudflare Tunnel, and those had to stay exactly as they were.</p>
+      <p>I wanted any subdomain that doesn’t exist, like <code>hello.example.com</code>, to show my own 404 page instead of a “site can’t be reached” error, without touching the subdomains that already run real apps. Three Cloudflare details made it work.</p>
 
-      <h2>The four pieces</h2>
-      <ol>
-        <li><strong>A wildcard DNS record.</strong> A proxied <code>AAAA</code> record for <code>*.example.com</code> pointing to <code>100::</code>, Cloudflare’s placeholder for “handled at the edge”. Explicit records always win over a wildcard, so existing subdomains keep resolving where they did.</li>
-        <li><strong>A wildcard Worker route.</strong> <code>*.example.com/*</code> sends every subdomain request to the site’s Worker.</li>
-        <li><strong>An exclusion route per app.</strong> Routes like <code>app.example.com/*</code> with <em>no</em> Worker attached. The most specific route wins, so app traffic never touches my Worker at all.</li>
-        <li><strong>A hostname check in the Worker.</strong> The main domain gets the site, anything else gets the 404 page.</li>
-      </ol>
+      <h2>1. A wildcard record never beats a real one</h2>
+      <p>A proxied <code>AAAA</code> record for <code>*.example.com</code> pointing to <code>100::</code> (Cloudflare’s placeholder for “handled at the edge”) catches every name that has no record of its own. Explicit records always win, so existing subdomains resolve exactly as before.</p>
 
-      <h2>The Worker</h2>
-      <p>The site is otherwise static, so the Worker is tiny. It runs before the static assets so it can decide by hostname:</p>
+      <h2>2. A route with no Worker is a valid route</h2>
+      <p>A Worker route <code>*.example.com/*</code> sends all those requests to one Worker. To keep an app out of it, add a more specific route like <code>app.example.com/*</code> and attach <em>no</em> Worker. The most specific route wins, so app traffic never reaches the Worker at all.</p>
+
+      <h2>3. A static-assets Worker can run code first</h2>
+      <p>Setting <code>run_worker_first: true</code> in <code>wrangler.jsonc</code> gives the script every request before the static files are served, so it can decide by hostname:</p>
       <div class="code-card">
         <div class="code-bar" aria-hidden="true"><i></i><i></i><i></i><span>worker.js</span></div>
 <pre><code><span class="tk-kw">const</span> SITE_HOSTS <span class="tk-pu">=</span> <span class="tk-kw">new</span> <span class="tk-ty">Set</span><span class="tk-pu">([</span><span class="tk-str">&quot;example.com&quot;</span><span class="tk-pu">,</span> <span class="tk-str">&quot;www.example.com&quot;</span><span class="tk-pu">]);</span>
-<span class="tk-kw">const</span> APP_HOSTS  <span class="tk-pu">=</span> <span class="tk-kw">new</span> <span class="tk-ty">Set</span><span class="tk-pu">([</span><span class="tk-str">&quot;app.example.com&quot;</span><span class="tk-pu">,</span> <span class="tk-str">&quot;api.example.com&quot;</span><span class="tk-pu">]);</span>
+<span class="tk-kw">const</span> APP_HOSTS  <span class="tk-pu">=</span> <span class="tk-kw">new</span> <span class="tk-ty">Set</span><span class="tk-pu">([</span><span class="tk-str">&quot;app.example.com&quot;</span><span class="tk-pu">]);</span>
 
 <span class="tk-kw">export default</span> <span class="tk-pu">{</span>
   <span class="tk-kw">async</span> <span class="tk-fn">fetch</span><span class="tk-pu">(</span>request<span class="tk-pu">,</span> env<span class="tk-pu">) {</span>
     <span class="tk-kw">const</span> host <span class="tk-pu">=</span> <span class="tk-kw">new</span> <span class="tk-ty">URL</span><span class="tk-pu">(</span>request<span class="tk-pu">.</span>url<span class="tk-pu">).</span>hostname<span class="tk-pu">;</span>
-
-    <span class="tk-cm">// The real site</span>
     <span class="tk-kw">if</span> <span class="tk-pu">(</span>SITE_HOSTS<span class="tk-pu">.</span><span class="tk-fn">has</span><span class="tk-pu">(</span>host<span class="tk-pu">))</span> <span class="tk-kw">return</span> env<span class="tk-pu">.</span>ASSETS<span class="tk-pu">.</span><span class="tk-fn">fetch</span><span class="tk-pu">(</span>request<span class="tk-pu">);</span>
+    <span class="tk-kw">if</span> <span class="tk-pu">(</span>APP_HOSTS<span class="tk-pu">.</span><span class="tk-fn">has</span><span class="tk-pu">(</span>host<span class="tk-pu">))</span>  <span class="tk-kw">return</span> <span class="tk-fn">fetch</span><span class="tk-pu">(</span>request<span class="tk-pu">);</span>  <span class="tk-cm">// safety net</span>
 
-    <span class="tk-cm">// Safety net: apps are excluded by route, but pass them through just in case</span>
-    <span class="tk-kw">if</span> <span class="tk-pu">(</span>APP_HOSTS<span class="tk-pu">.</span><span class="tk-fn">has</span><span class="tk-pu">(</span>host<span class="tk-pu">))</span> <span class="tk-kw">return</span> <span class="tk-fn">fetch</span><span class="tk-pu">(</span>request<span class="tk-pu">);</span>
-
-    <span class="tk-cm">// Everything else: the 404 page, with a real 404 status</span>
     <span class="tk-kw">const</span> page <span class="tk-pu">=</span> <span class="tk-kw">await</span> env<span class="tk-pu">.</span>ASSETS<span class="tk-pu">.</span><span class="tk-fn">fetch</span><span class="tk-pu">(</span><span class="tk-kw">new</span> <span class="tk-ty">URL</span><span class="tk-pu">(</span><span class="tk-str">&quot;/404.html&quot;</span><span class="tk-pu">,</span> request<span class="tk-pu">.</span>url<span class="tk-pu">));</span>
     <span class="tk-kw">return</span> <span class="tk-kw">new</span> <span class="tk-ty">Response</span><span class="tk-pu">(</span>page<span class="tk-pu">.</span>body<span class="tk-pu">, {</span> status<span class="tk-pu">:</span> <span class="tk-str">404</span><span class="tk-pu">,</span> headers<span class="tk-pu">:</span> page<span class="tk-pu">.</span>headers <span class="tk-pu">});</span>
   <span class="tk-pu">},</span>
 <span class="tk-pu">};</span></code></pre>
       </div>
-      <p>And the matching bits of the Wrangler config. <code>run_worker_first</code> makes the script see every request, and <code>not_found_handling</code> covers missing paths on the main domain:</p>
-      <div class="code-card">
-        <div class="code-bar" aria-hidden="true"><i></i><i></i><i></i><span>wrangler.jsonc</span></div>
-<pre><code><span class="tk-pu">{</span>
-  <span class="tk-str">&quot;main&quot;</span><span class="tk-pu">:</span> <span class="tk-str">&quot;worker.js&quot;</span><span class="tk-pu">,</span>
-  <span class="tk-str">&quot;assets&quot;</span><span class="tk-pu">: {</span>
-    <span class="tk-str">&quot;directory&quot;</span><span class="tk-pu">:</span> <span class="tk-str">&quot;.&quot;</span><span class="tk-pu">,</span>
-    <span class="tk-str">&quot;binding&quot;</span><span class="tk-pu">:</span> <span class="tk-str">&quot;ASSETS&quot;</span><span class="tk-pu">,</span>
-    <span class="tk-str">&quot;run_worker_first&quot;</span><span class="tk-pu">:</span> <span class="tk-kw">true</span><span class="tk-pu">,</span>
-    <span class="tk-str">&quot;not_found_handling&quot;</span><span class="tk-pu">:</span> <span class="tk-str">&quot;404-page&quot;</span>
-  <span class="tk-pu">}</span>
-<span class="tk-pu">}</span></code></pre>
-      </div>
-
-      <h2>HTTPS everywhere, while I was there</h2>
-      <p>With every subdomain now answering, I also turned on Cloudflare’s <em>Always Use HTTPS</em> and sent an HSTS header with <code>includeSubDomains</code>, so browsers stop trying plain HTTP anywhere on the domain.</p>
-
-      <h2>Testing it</h2>
-      <ul>
-        <li><code>http://random-test-123.example.com/hello</code> redirected to HTTPS and showed the 404 page with a 404 status.</li>
-        <li>Each app subdomain still went straight to its own login screen.</li>
-        <li>The main site and <code>www</code> were unchanged.</li>
-      </ul>
-
-      <h2>The one gotcha</h2>
-      <blockquote>The catch-all is greedy. When I add a new app subdomain, it gets the 404 page until I add its exclusion route.</blockquote>
-      <p>That’s why the Worker keeps a list of app hostnames as a safety net, and why “add the exclusion route” is now part of my checklist for every new subdomain.</p>
+      <p>One thing to remember: the catch-all is greedy. Every new app subdomain needs its own no-Worker route, or it gets the 404 page too.</p>
     </article>
   </main>
 
@@ -130,7 +96,7 @@
           <h3>Site</h3>
           <ul>
             <li><a href="/#projects">Projects</a></li>
-            <li><a href="/notes/">Notes</a></li>
+            <li><a href="/til/">TIL</a></li>
             <li><a href="/uses/">Uses</a></li>
             <li><a href="/ar/" lang="ar" hreflang="ar">العربية</a></li>
           </ul>
