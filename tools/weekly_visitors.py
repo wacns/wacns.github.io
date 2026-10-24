@@ -114,7 +114,7 @@ def ga_section(session, prop, start, end, prev_start, prev_end):
         "## Google Analytics",
         f"**{int(users)} users** · {int(sessions)} sessions · {int(views)} page views · "
         f"avg. {int(dur // 60)}m {int(dur % 60)}s per session · {eng * 100:.0f}% engaged · users {trend(int(users), int(prev[0]))}",
-        "_Only visitors who allowed cookies._\n",
+        "_Visitors whose browser didn't block Google Analytics._\n",
         "**Top pages**\n" + md_table(["Page", "Views"], rows(pages)) + "\n",
         "**Sources**\n" + md_table(["Source / medium", "Sessions"], rows(sources)),
     ])
