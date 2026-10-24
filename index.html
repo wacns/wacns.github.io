@@ -7,6 +7,36 @@
   <meta name="description" content="Abdullah (wacns) — backend developer in Manama, Bahrain. .NET, C#, MySQL and integrations.">
   <meta name="theme-color" content="#0a0a0f">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://wacns.com/">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Person",
+        "@id": "https://wacns.com/#person",
+        "name": "Abdullah",
+        "alternateName": "wacns",
+        "url": "https://wacns.com/",
+        "image": "https://wacns.github.io/og.png",
+        "jobTitle": "Backend Developer",
+        "address": { "@type": "PostalAddress", "addressLocality": "Manama", "addressCountry": "BH" },
+        "knowsAbout": ["C#", "ASP.NET Core", "Node.js", "MySQL", "MongoDB", "REST APIs", "Cloudflare Workers", "Docker"],
+        "sameAs": [
+          "https://github.com/wacns",
+          "https://www.linkedin.com/in/abdullah-mohammed-137928219"
+        ]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://wacns.com/#website",
+        "url": "https://wacns.com/",
+        "name": "wacns",
+        "author": { "@id": "https://wacns.com/#person" }
+      }
+    ]
+  }
+  </script>
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://wacns.com/">
   <meta property="og:title" content="Abdullah — Backend Developer">
@@ -380,21 +410,55 @@
     .activity-legend .l3 { background: #7a2bd6; }
     .activity-legend .l4 { background: #a66bf0; }
 
-    /* ── Skills ── */
-    .skills {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 0.75rem;
+    /* ── About (code card) ── */
+    .code-card {
+      background: #0c0c12;
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      overflow: hidden;
     }
-    @media (min-width: 600px) { .skills { grid-template-columns: repeat(3, 1fr); } }
-    .skill-group h3 {
-      font-size: 0.85rem;
-      font-weight: 600;
-      margin-bottom: 0.4rem;
+    .code-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.65rem 0.9rem;
+      border-bottom: 1px solid var(--card-border);
+      background: var(--card-bg);
     }
-    .skill-group p {
-      font-size: 0.84rem;
+    .code-bar i { width: 10px; height: 10px; border-radius: 50%; background: #2a2a3a; }
+    .code-bar span {
+      margin-left: 0.5rem;
+      font-family: var(--mono);
+      font-size: 0.7rem;
       color: var(--muted);
+    }
+    .code-card pre {
+      margin: 0;
+      padding: 1rem 1.1rem 1.15rem;
+      overflow-x: auto;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      line-height: 1.7;
+      color: #d4d4e0;
+      tab-size: 4;
+    }
+    .tk-kw  { color: #c792ea; }
+    .tk-ty  { color: #82aaff; }
+    .tk-pr  { color: #f0f0f5; }
+    .tk-str { color: #a5e3a0; }
+    .tk-cm  { color: #5c5c70; font-style: italic; }
+    .tk-pu  { color: #888899; }
+    .code-card { position: relative; }
+    @media (max-width: 600px) {
+      .code-card pre { font-size: 0.7rem; padding-right: 2rem; }
+      .code-card::after {
+        content: "";
+        position: absolute;
+        top: 41px; right: 0; bottom: 0;
+        width: 2rem;
+        background: linear-gradient(90deg, transparent, #0c0c12);
+        pointer-events: none;
+      }
     }
 
     /* ── Footer ── */
@@ -444,7 +508,7 @@
         <a href="#now" class="opt">Now</a>
         <a href="#projects">Projects</a>
         <a href="#activity">Activity</a>
-        <a href="#skills">Skills</a>
+        <a href="#about">About</a>
       </nav>
     </div>
   </header>
@@ -529,21 +593,23 @@
       </div>
     </section></div>
 
-    <div class="band"><section class="wrap reveal" id="skills" aria-labelledby="skills-heading">
-      <h2 id="skills-heading">What I work with</h2>
-      <div class="skills">
-        <div class="skill-group">
-          <h3>Backend</h3>
-          <p>C#, ASP.NET Core, Node.js, REST APIs, third-party integrations</p>
-        </div>
-        <div class="skill-group">
-          <h3>Data</h3>
-          <p>MySQL query tuning, reporting, MongoDB</p>
-        </div>
-        <div class="skill-group">
-          <h3>Tooling</h3>
-          <p>Docker, GitHub Actions, Cloudflare, Puppeteer</p>
-        </div>
+    <div class="band"><section class="wrap reveal" id="about" aria-labelledby="about-heading">
+      <h2 id="about-heading">About</h2>
+      <div class="code-card">
+        <div class="code-bar" aria-hidden="true"><i></i><i></i><i></i><span>Abdullah.cs</span></div>
+<pre><code><span class="tk-kw">var</span> abdullah <span class="tk-pu">=</span> <span class="tk-kw">new</span> <span class="tk-ty">Developer</span>
+<span class="tk-pu">{</span>
+    <span class="tk-pr">Handle</span>   <span class="tk-pu">=</span> <span class="tk-str">"wacns"</span><span class="tk-pu">,</span>
+    <span class="tk-pr">Role</span>     <span class="tk-pu">=</span> <span class="tk-str">"Backend Developer"</span><span class="tk-pu">,</span>
+    <span class="tk-pr">Location</span> <span class="tk-pu">=</span> <span class="tk-str">"Manama, Bahrain"</span><span class="tk-pu">,</span>
+
+    <span class="tk-pr">Backend</span>  <span class="tk-pu">=</span> <span class="tk-pu">[</span><span class="tk-str">"C#"</span><span class="tk-pu">,</span> <span class="tk-str">"ASP.NET Core"</span><span class="tk-pu">,</span> <span class="tk-str">"Node.js"</span><span class="tk-pu">,</span> <span class="tk-str">"REST APIs"</span><span class="tk-pu">],</span>
+    <span class="tk-pr">Data</span>     <span class="tk-pu">=</span> <span class="tk-pu">[</span><span class="tk-str">"MySQL"</span><span class="tk-pu">,</span> <span class="tk-str">"MongoDB"</span><span class="tk-pu">,</span> <span class="tk-str">"Supabase"</span><span class="tk-pu">],</span>
+    <span class="tk-pr">Tooling</span>  <span class="tk-pu">=</span> <span class="tk-pu">[</span><span class="tk-str">"Docker"</span><span class="tk-pu">,</span> <span class="tk-str">"GitHub Actions"</span><span class="tk-pu">,</span> <span class="tk-str">"Cloudflare Workers"</span><span class="tk-pu">,</span> <span class="tk-str">"Puppeteer"</span><span class="tk-pu">],</span>
+
+    <span class="tk-cm">// What I care about</span>
+    <span class="tk-pr">Focus</span>    <span class="tk-pu">=</span> <span class="tk-pu">[</span><span class="tk-str">"fast queries"</span><span class="tk-pu">,</span> <span class="tk-str">"clean APIs"</span><span class="tk-pu">,</span> <span class="tk-str">"integrations that just work"</span><span class="tk-pu">],</span>
+<span class="tk-pu">};</span></code></pre>
       </div>
     </section></div>
 
@@ -571,7 +637,7 @@
           <ul>
             <li><a href="#projects">Projects</a></li>
             <li><a href="#activity">Activity</a></li>
-            <li><a href="#skills">Skills</a></li>
+            <li><a href="#about">About</a></li>
           </ul>
         </div>
         <div class="footer-col">
