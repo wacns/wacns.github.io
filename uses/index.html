@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Uses — wacns</title>
+  <meta name="description" content="The languages, data stores and tools I use to build things.">
+  <meta name="theme-color" content="#0a0a0f">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://wacns.com/uses/">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://wacns.com/uses/">
+  <meta property="og:title" content="Uses — wacns">
+  <meta property="og:description" content="The languages, data stores and tools I use to build things.">
+  <meta property="og:image" content="https://wacns.com/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <script>(function(){var d=document.documentElement,t=null;d.classList.add('js');try{t=localStorage.getItem('theme');}catch(e){}if(t!=='light'&&t!=='dark'){t=window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';}d.setAttribute('data-theme',t);})();</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+  <div class="hero-fx" aria-hidden="true"><div class="hero-glow"></div></div>
+  <a class="skip-link" href="#content">Skip to content</a>
+  <header class="topbar solid" id="topbar">
+    <div class="wrap">
+      <a class="brand" href="/"><img src="/favicon.svg" alt="">wacns</a>
+      <div class="topbar-right">
+        <nav class="topnav" aria-label="Sections">
+        <a href="/notes/">Notes</a>
+        <a href="/uses/">Uses</a>
+        </nav>
+        <button type="button" class="icon-btn" id="paletteBtn" aria-label="Search and commands" aria-haspopup="dialog">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><kbd>Ctrl K</kbd>
+        </button>
+        <button type="button" class="icon-btn" id="themeBtn" aria-label="Switch theme">
+          <svg class="theme-dark-only" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          <svg class="theme-light-only" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
+        <a class="icon-btn" href="/ar/" hreflang="ar" aria-label="Read this page in Arabic" lang="ar">العربية</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="content">
+    <div class="wrap page-head">
+      <p class="crumbs"><a href="/">Home</a> / Uses</p>
+      <h1>Uses</h1>
+      <p class="lede">The languages, data stores and tools I reach for when I build things.</p>
+    </div>
+    <article class="wrap prose">
+      <section class="uses-group">
+        <h2>Languages &amp; frameworks</h2>
+        <ul class="uses-list">
+          <li><strong>C# &amp; ASP.NET Core</strong><span>Where most of my backend work lives: APIs, background jobs and reporting.</span></li>
+          <li><strong>Node.js</strong><span>Bots, scrapers and small services, often with discord.js or Puppeteer.</span></li>
+          <li><strong>Plain HTML &amp; CSS</strong><span>This site. No framework, no build step.</span></li>
+        </ul>
+      </section>
+      <section class="uses-group">
+        <h2>Data</h2>
+        <ul class="uses-list">
+          <li><strong>MySQL</strong><span>My main database, and the one I spend the most time tuning.</span></li>
+          <li><strong>MongoDB</strong><span>For bots and projects with loose, document-shaped data.</span></li>
+          <li><strong>Supabase</strong><span>Auth and Postgres for FinancialAdvisor.</span></li>
+        </ul>
+      </section>
+      <section class="uses-group">
+        <h2>Infrastructure</h2>
+        <ul class="uses-list">
+          <li><strong>Cloudflare</strong><span>DNS, Workers, Tunnels and Zero Trust. This site runs on a Worker.</span></li>
+          <li><strong>Docker</strong><span>Packaging APIs so they run the same everywhere.</span></li>
+          <li><strong>GitHub Actions</strong><span>CI, plus scheduled jobs like the 8 Ball Pool collector.</span></li>
+        </ul>
+      </section>
+      <section class="uses-group">
+        <h2>Automation</h2>
+        <ul class="uses-list">
+          <li><strong>Puppeteer</strong><span>Driving a real browser when there’s no API.</span></li>
+          <li><strong>Claude</strong><span>Pair-programming, reviews and chores like this site’s redesign.</span></li>
+        </ul>
+      </section>
+    </article>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <div class="footer-grid">
+        <div class="footer-about">
+          <a class="brand" href="/"><img src="/favicon.svg" alt="">wacns</a>
+          <p>Backend developer in Manama, Bahrain.</p>
+        </div>
+        <div class="footer-col">
+          <h3>Site</h3>
+          <ul>
+            <li><a href="/#projects">Projects</a></li>
+            <li><a href="/notes/">Notes</a></li>
+            <li><a href="/uses/">Uses</a></li>
+            <li><a href="/ar/" lang="ar" hreflang="ar">العربية</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h3>Elsewhere</h3>
+          <ul>
+            <li><a href="https://github.com/wacns" target="_blank" rel="noopener">GitHub</a></li>
+            <li><a href="https://www.linkedin.com/in/abdullah-mohammed-137928219" target="_blank" rel="noopener">LinkedIn</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 wacns</span>
+        <span class="colophon">Plain HTML &amp; CSS, served by Cloudflare Workers<br><span id="lastDeploy" hidden></span></span>
+      </div>
+    </div>
+  </footer>
+  <div class="palette" id="palette" role="dialog" aria-modal="true" aria-label="Command palette" hidden>
+    <div class="palette-box">
+      <input class="palette-input" type="text" role="combobox" aria-expanded="true" aria-controls="paletteList" aria-autocomplete="list" aria-label="Search and commands" autocomplete="off" spellcheck="false">
+      <!-- [html-validate-disable-next prefer-native-element -- filterable command list; a native select can't type-to-filter] -->
+      <ul class="palette-list" id="paletteList" role="listbox" aria-label="Search and commands"></ul>
+      <div class="palette-hint" aria-hidden="true"></div>
+    </div>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="/assets/site.js" defer></script>
+</body>
+</html>

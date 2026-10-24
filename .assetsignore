@@ -12,3 +12,5 @@ wrangler.jsonc
 .wrangler
 node_modules
 worker.js
+tools
+tools/**
