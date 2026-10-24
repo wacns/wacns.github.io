@@ -9,7 +9,7 @@
   var GITHUB = 'https://github.com/wacns';
   var HOUR = 3600000;
   // Google Analytics 4 measurement ID (e.g. 'G-ABC123XYZ'). Empty = no banner, no tracking.
-  var GA_ID = '';
+  var GA_ID = 'G-V7XNEPYZM1';
   // On unknown *.wacns.com hosts (which show the 404 page) site links must point back to wacns.com
   var BASE = (/\.wacns\.com$/.test(location.hostname) && location.hostname !== 'www.wacns.com') ? 'https://wacns.com' : '';
 
