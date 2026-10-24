@@ -27,6 +27,12 @@ export default {
       return fetch(request);
     }
 
+    // Shared files the 404 page needs (styles, script, icon) load on any host
+    const path = new URL(request.url).pathname;
+    if (path.startsWith("/assets/") || path === "/favicon.svg") {
+      return env.ASSETS.fetch(request);
+    }
+
     const page = await env.ASSETS.fetch(new URL("/404.html", request.url));
     return new Response(page.body, { status: 404, headers: page.headers });
   },

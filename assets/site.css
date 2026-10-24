@@ -625,3 +625,29 @@ html[lang="ar"] .palette-group { letter-spacing: 0; font-size: 0.72rem; }
 .notes-lang { font-size: 0.85rem; color: var(--muted); margin: -0.5rem 0 1rem; }
 html[dir="rtl"] bdi { direction: ltr; unicode-bidi: isolate; }
 .note-list.no-dates a { grid-template-columns: 1fr; }
+
+/* ── 404 ── */
+.nf { min-height: calc(100vh - 54px - 220px); display: flex; align-items: center; }
+.nf-inner { padding-top: 4rem; padding-bottom: 4rem; }
+.nf-code {
+  font-size: clamp(5rem, 22vw, 8.5rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -4px;
+  background: linear-gradient(120deg, var(--accent-text), #c9a8ff);
+  -webkit-background-clip: text;
+          background-clip: text;
+  color: transparent;
+  margin-bottom: 0.75rem;
+}
+.nf-hint { margin-top: 2rem; font-size: 0.82rem; color: var(--muted); }
+.nf-hint kbd {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  border: 1px solid var(--card-border);
+  border-bottom-width: 2px;
+  border-radius: 5px;
+  padding: 0.05rem 0.35rem;
+  background: var(--card-bg);
+  color: var(--text);
+}

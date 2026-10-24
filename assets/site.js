@@ -8,6 +8,8 @@
   var LINKEDIN = 'https://www.linkedin.com/in/abdullah-mohammed-137928219';
   var GITHUB = 'https://github.com/wacns';
   var HOUR = 3600000;
+  // On unknown *.wacns.com hosts (which show the 404 page) site links must point back to wacns.com
+  var BASE = (/\.wacns\.com$/.test(location.hostname) && location.hostname !== 'www.wacns.com') ? 'https://wacns.com' : '';
 
   // TIL entries listed in the command palette (newest first)
   var NOTES = [
@@ -244,7 +246,7 @@
     var items = [], filtered = [], selected = 0, lastFocus = null;
     var homePath = AR ? '/ar/' : '/';
 
-    function go(url) { return function () { window.location.href = url; }; }
+    function go(url) { return function () { window.location.href = BASE + url; }; }
     function build() {
       items = [];
       $all('.topnav a[href^="#"]').forEach(function (a) {

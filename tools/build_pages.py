@@ -29,7 +29,7 @@ S = {
              home="الرئيسية", palette_label="لوحة الأوامر"),
 }
 
-def head(lang, title, desc, path, extra="", alternates=None, og=True):
+def head(lang, title, desc, path, extra="", alternates=None, og=True, og_image="/og.png", canonical=True, robots=None):
     url = "https://wacns.com" + path
     dirattr = ' dir="rtl"' if lang == "ar" else ""
     fonts = "family=Inter:wght@300;400;500;600;700"
@@ -45,7 +45,7 @@ def head(lang, title, desc, path, extra="", alternates=None, og=True):
   <meta property="og:url" content="{url}">
   <meta property="og:title" content="{html.escape(title)}">
   <meta property="og:description" content="{html.escape(desc)}">
-  <meta property="og:image" content="https://wacns.com/og.png">
+  <meta property="og:image" content="https://wacns.com{og_image}">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">"""
@@ -58,7 +58,7 @@ def head(lang, title, desc, path, extra="", alternates=None, og=True):
   <meta name="description" content="{html.escape(desc)}">
   <meta name="theme-color" content="#0a0a0f">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="canonical" href="{url}">{alt}{ogt}
+  {f'<link rel="canonical" href="{url}">' if canonical else ''}{f'<meta name="robots" content="{robots}">' if robots else ''}{alt}{ogt}
   {THEME_BOOT}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -399,7 +399,7 @@ def homepage(lang):
 def sub_nav(lang="en"):
     return [("TIL", "/til/", False), ("Uses", "/uses/", False)]
 
-def article_page(path, title, desc, crumbs, header_html, body_html, published=None):
+def article_page(path, title, desc, crumbs, header_html, body_html, published=None, og_image="/og.png"):
     ld = ""
     if published:
         ld = f"""
@@ -408,7 +408,7 @@ def article_page(path, title, desc, crumbs, header_html, body_html, published=No
                "datePublished": published, "url": "https://wacns.com" + path,
                "author": {"@type": "Person", "name": "Abdullah", "alternateName": "wacns", "url": "https://wacns.com/"}}, ensure_ascii=False)}
   </script>"""
-    page = head("en", title + " — wacns", desc, path, extra=ld) + f"""
+    page = head("en", title + " — wacns", desc, path, extra=ld, og_image=og_image) + f"""
 <body>
   <div class="hero-fx" aria-hidden="true"><div class="hero-glow"></div></div>
 {topbar('en', sub_nav(), '/', lang_href='/ar/').replace('<header class="topbar" id="topbar">', '<header class="topbar solid" id="topbar">')}
@@ -432,7 +432,7 @@ def til_index():
     article_page("/til/", "Today I Learned", "Short notes on things I’ve picked up while building, one idea per entry.",
         '<a href="/">Home</a> / TIL',
         '<h1>Today I Learned</h1>\n      <p class="lede">Short notes on things I’ve picked up while building. One idea per entry, written down so I don’t have to learn it twice.</p>',
-        f'      <ul class="note-list">\n{notes_list()}\n      </ul>')
+        f'      <ul class="note-list">\n{notes_list()}\n      </ul>', og_image="/til/og.png")
 
 def kw(t): return tk("kw", t)
 def st(t): return tk("str", t)
@@ -446,7 +446,7 @@ def til_entry(n, minutes, body):
     article_page(f"/til/{n['slug']}/", n["title"], n["summary"],
         '<a href="/">Home</a> / <a href="/til/">TIL</a>',
         f'<h1>{html.escape(n["title"])}</h1>\n      <p class="page-meta"><time datetime="{n["date"]}">{n["nice"]}</time> · {minutes} min read</p>',
-        body, published=n["date"])
+        body, published=n["date"], og_image=f"/til/{n['slug']}/og.png")
 
 def til_worker():
     n = TIL["worker-subdomain-catch-all"]
@@ -551,10 +551,40 @@ def uses_page():
     article_page("/uses/", "Uses", "The languages, data stores and tools I use to build things.",
         '<a href="/">Home</a> / Uses',
         '<h1>Uses</h1>\n      <p class="lede">The languages, data stores and tools I reach for when I build things.</p>',
-        body.rstrip("\n"))
+        body.rstrip("\n"), og_image="/uses/og.png")
+
+def page_404():
+    """Also served for unknown *.wacns.com hosts, so every link is absolute to wacns.com."""
+    body = f"""
+<body>
+  <div class="hero-fx" aria-hidden="true"><div class="hero-bg"></div><div class="hero-glow"></div></div>
+{topbar('en', sub_nav(), '/', lang_href='/ar/')}
+
+  <main id="content" class="nf">
+    <div class="wrap nf-inner">
+      <p class="nf-code" aria-hidden="true">404</p>
+      <h1>Page not found</h1>
+      <p class="lede">This page doesn\u2019t exist, or it may have moved.</p>
+      <div class="links">
+        <a class="btn btn-primary" href="/">Go to the homepage</a>
+        <a class="btn btn-ghost" href="/til/">Today I learned</a>
+      </div>
+      <p class="nf-hint">Tip: press <kbd>Ctrl</kbd> <kbd>K</kbd> or <kbd>/</kbd> to search the site.</p>
+    </div>
+  </main>
+
+{footer('en', '/')}
+{palette('en')}
+{TAIL}"""
+    page = head("en", "Page not found — wacns", "This page doesn\u2019t exist.", "/404.html", og=False, canonical=False, robots="noindex") + body
+    # Make site links absolute (shared files under /assets and /favicon.svg are served on every host)
+    for a in ('href="/"', 'href="/til/"', 'href="/uses/"', 'href="/ar/"', 'href="/#projects"'):
+        page = page.replace(a, a.replace('"/', '"https://wacns.com/'))
+    write("/404.html", page)
 
 homepage("en")
 homepage("ar")
+page_404()
 til_index()
 til_assetsignore()
 til_worker()

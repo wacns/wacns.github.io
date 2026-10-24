@@ -22,7 +22,8 @@ Plain HTML/CSS/JS. No package manager, no framework, no build step on deploy.
 | `uses/` | Tools/stack page |
 | `assets/site.css`, `assets/site.js` | Shared styles (dark + light themes) and behaviour (theme toggle, Ctrl+K palette, intro toggle, live GitHub stats, activity heatmap, colophon) |
 | `tools/build_pages.py` | Generator for the shared-layout pages above (see below) |
-| `404.html` | Served with a 404 status for missing paths and unknown subdomains |
+| `404.html` | Generated. Served with a 404 status for missing paths **and unknown subdomains**, so all its site links are absolute (`https://wacns.com/...`) |
+| `tools/og_cards.py` | Generates the 1200×630 link-preview images (`til/og.png`, `til/<slug>/og.png`, `uses/og.png`). Needs Python Playwright |
 | `stremio/`, `stremio-source/`, `config.js` | Old Stremio sideload hub. **Unlinked** from the site but still live so existing sources keep working |
 | `worker.js` | Worker script (hostname routing, see below) |
 | `wrangler.jsonc` | Worker config |
@@ -32,7 +33,7 @@ Plain HTML/CSS/JS. No package manager, no framework, no build step on deploy.
 
 ### Editing pages
 
-`index.html`, `ar/index.html`, `til/**` and `uses/index.html` are **generated** by `tools/build_pages.py`.
+`index.html`, `ar/index.html`, `404.html`, `til/**` and `uses/index.html` are **generated** by `tools/build_pages.py`.
 Edit the content in that script, then run from the repo root:
 
 ```
@@ -40,7 +41,7 @@ python3 tools/build_pages.py .
 ```
 
 …and commit the regenerated HTML. Editing the generated HTML directly works too, but the next regeneration overwrites it.
-When adding a TIL entry: add it to `NOTES` in the script (plus a `til_*` page function), **and** to `NOTES` in `assets/site.js` (palette list), and to `sitemap.xml`. Keep entries framed as something learned, not as incident reports.
+When adding a TIL entry: add it to `NOTES` in the script (plus a `til_*` page function), run `python3 tools/og_cards.py .` to create its preview image, **and** to `NOTES` in `assets/site.js` (palette list), and to `sitemap.xml`. Keep entries framed as something learned, not as incident reports.
 
 ### Content rules (from the site owner)
 
@@ -64,7 +65,7 @@ and `connect-src` to `api.github.com` and `github-contributions-api.jogruber.de`
 `worker.js` runs before static assets (`run_worker_first: true`):
 
 - `wacns.com` / `www.wacns.com` → static site.
-- Any other `*.wacns.com` → `404.html` with a 404 status.
+- Any other `*.wacns.com` → `404.html` with a 404 status (but `/assets/*` and `/favicon.svg` are served on every host so that page can load its styles and script).
 - Known app hosts (`APP_HOSTS` list) → passed through untouched (safety net).
 
 Cloudflare side (configured in the dashboard, not in this repo):
