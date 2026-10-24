@@ -184,13 +184,10 @@
       display: flex;
       flex-direction: column;
       gap: 0.55rem;
-      text-decoration: none;
-      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+      transition: border-color 0.2s;
     }
     .card:hover {
-      border-color: rgba(var(--accent-rgb), 0.45);
-      box-shadow: 0 0 20px rgba(var(--accent-rgb), 0.12);
-      transform: translateY(-2px);
+      border-color: rgba(var(--accent-rgb), 0.35);
     }
     .card-title {
       font-size: 0.95rem;
@@ -199,8 +196,6 @@
       justify-content: space-between;
       gap: 0.5rem;
     }
-    .card-title .arrow { color: var(--muted); font-weight: 400; transition: color 0.15s; }
-    .card:hover .arrow { color: var(--accent); }
     .card-desc {
       font-size: 0.84rem;
       color: var(--muted);
@@ -306,36 +301,36 @@
     <section id="projects" aria-labelledby="projects-heading">
       <h2 id="projects-heading" class="reveal">Projects</h2>
       <div class="projects">
-        <a class="card reveal" data-repo="wacns/financial-advisor-releases" href="https://github.com/wacns/financial-advisor-releases" target="_blank" rel="noopener">
-          <span class="card-title">FinancialAdvisor <span class="arrow" aria-hidden="true">↗</span></span>
+        <article class="card reveal" data-repo="wacns/financial-advisor-releases">
+          <span class="card-title">FinancialAdvisor</span>
           <span class="card-desc">Personal finance and budgeting app with an AI assistant. Ships for Android, iOS, Windows, macOS and Linux with built-in desktop auto-updates.</span>
           <ul class="tags"><li>Cross-platform</li><li>Supabase</li><li>AI</li></ul>
           <span class="card-meta"></span>
-        </a>
-        <a class="card reveal" data-repo="wacns/api.garagecom" href="https://github.com/wacns/api.garagecom" target="_blank" rel="noopener">
-          <span class="card-title">Garagecom API <span class="arrow" aria-hidden="true">↗</span></span>
+        </article>
+        <article class="card reveal" data-repo="wacns/api.garagecom">
+          <span class="card-title">Garagecom API</span>
           <span class="card-desc">Backend for Garagecom, a car-owner and garage app. Controllers, middleware and filters on ASP.NET Core, packaged with Docker.</span>
           <ul class="tags"><li>C#</li><li>ASP.NET Core</li><li>Docker</li></ul>
           <span class="card-meta"></span>
-        </a>
-        <a class="card reveal" data-repo="wacns/8bp-free-gift-collector" href="https://github.com/wacns/8bp-free-gift-collector" target="_blank" rel="noopener">
-          <span class="card-title">8 Ball Pool Gift Collector <span class="arrow" aria-hidden="true">↗</span></span>
+        </article>
+        <article class="card reveal" data-repo="wacns/8bp-free-gift-collector">
+          <span class="card-title">8 Ball Pool Gift Collector</span>
           <span class="card-desc">Collects the free daily gifts from the 8 Ball Pool web shop on a schedule and logs every reward to an archive.</span>
           <ul class="tags"><li>Puppeteer</li><li>GitHub Actions</li></ul>
           <span class="card-meta"></span>
-        </a>
-        <a class="card reveal" data-repo="wacns/AutoStore-WACNS" href="https://github.com/wacns/AutoStore-WACNS" target="_blank" rel="noopener">
-          <span class="card-title">AutoStore <span class="arrow" aria-hidden="true">↗</span></span>
+        </article>
+        <article class="card reveal" data-repo="wacns/AutoStore-WACNS">
+          <span class="card-title">AutoStore</span>
           <span class="card-desc">Discord storefront bot with products, stock, user balances and payment handling, all managed through slash commands.</span>
           <ul class="tags"><li>Node.js</li><li>discord.js</li><li>MongoDB</li></ul>
           <span class="card-meta"></span>
-        </a>
-        <a class="card reveal" href="/stremio/">
-          <span class="card-title">Stremio Source <span class="arrow" aria-hidden="true">→</span></span>
+        </article>
+        <article class="card reveal">
+          <span class="card-title">Stremio Source</span>
           <span class="card-desc">One-tap Stremio sources for AltStore, SideStore, Feather and seven other iOS sideloading apps, generated from a single config.</span>
           <ul class="tags"><li>GitHub Pages</li><li>JSON</li></ul>
           <span class="card-meta"></span>
-        </a>
+        </article>
       </div>
     </section>
 
