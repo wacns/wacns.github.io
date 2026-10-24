@@ -1,0 +1,35 @@
+name: Weekly visitors
+
+# Every Monday morning (Bahrain time), posts last week's Cloudflare Web Analytics
+# numbers as an issue. Needs a repository secret CF_ANALYTICS_TOKEN
+# (Cloudflare API token with Account → Account Analytics → Read). Skips quietly without it.
+on:
+  schedule:
+    - cron: "17 4 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build the report
+        env:
+          CF_API_TOKEN: ${{ secrets.CF_ANALYTICS_TOKEN }}
+        run: python3 tools/weekly_visitors.py > report.md
+
+      - name: Post it as an issue
+        run: |
+          if [ ! -s report.md ]; then echo "No report (token missing?)"; exit 0; fi
+          gh label create weekly-report --color 8A2BE2 --description "Weekly visitor report" 2>/dev/null || true
+          for n in $(gh issue list --label weekly-report --state open --json number --jq '.[].number'); do
+            gh issue close "$n"
+          done
+          gh issue create --label weekly-report --title "$(head -1 report.md | sed 's/^# //')" --body-file report.md

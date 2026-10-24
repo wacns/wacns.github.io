@@ -21,7 +21,10 @@ def _ver(rel):
 CSS_URL = "/assets/site.css?v=" + _ver("assets/site.css")
 JS_URL = "/assets/site.js?v=" + _ver("assets/site.js")
 
-THEME_BOOT = ("<script>(function(){var d=document.documentElement,t=null;d.classList.add('js');"
+THEME_BOOT = ("<script>(function(){"
+              # The GitHub Pages mirror sends visitors to the main domain, same path
+              "if(/\\.github\\.io$/.test(location.hostname)){location.replace('https://wacns.com'+location.pathname+location.search+location.hash);return;}"
+              "var d=document.documentElement,t=null;d.classList.add('js');"
               "try{t=localStorage.getItem('theme');}catch(e){}"
               "if(t!=='light'&&t!=='dark'){t=window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';}"
               "d.setAttribute('data-theme',t);"

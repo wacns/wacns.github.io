@@ -1,0 +1,68 @@
+name: Uptime
+
+# Checks wacns.com every 15 minutes. Opens one issue when it goes down
+# and closes it automatically when it recovers.
+# (App subdomains aren't checked: they depend on a PC that's sometimes off.)
+on:
+  schedule:
+    - cron: "7,22,37,52 * * * *"
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+concurrency: uptime
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - name: Probe the site
+        id: probe
+        run: |
+          probe() {
+            local url="$1" expect="$2" text="$3" code
+            code=$(curl -sS -o /tmp/body -w '%{http_code}' --max-time 20 "$url" 2>/dev/null) || code="000"
+            if [ "$code" != "$expect" ]; then
+              problems+="- ${url} returned ${code} (expected ${expect})"$'\n'
+            elif [ -n "$text" ] && ! grep -q "$text" /tmp/body; then
+              problems+="- ${url} is missing \"${text}\""$'\n'
+            fi
+          }
+          run_all() {
+            problems=""
+            probe https://wacns.com/ 200 "Abdullah"
+            probe https://wacns.com/til/ 200 "Today I Learned"
+            probe https://uptime-check.wacns.com/ 404 "Page not found"
+          }
+          run_all
+          # Retry once a minute later so a single blip doesn't raise an alert
+          if [ -n "$problems" ]; then sleep 60; run_all; fi
+          printf '%s' "$problems"
+          {
+            echo "problems<<PROBLEMS_EOF"
+            printf '%s' "$problems"
+            echo "PROBLEMS_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Open an outage issue
+        if: steps.probe.outputs.problems != ''
+        env:
+          PROBLEMS: ${{ steps.probe.outputs.problems }}
+        run: |
+          gh label create uptime --color D93F0B --description "wacns.com outage" 2>/dev/null || true
+          open=$(gh issue list --label uptime --state open --json number --jq '.[0].number')
+          if [ -z "$open" ]; then
+            gh issue create --label uptime --title "wacns.com is down" \
+              --body "$(printf 'Detected at %s UTC:\n\n%s\nThis issue closes itself when the site is back.\n\ncc @wacns' "$(date -u +'%F %R')" "$PROBLEMS")"
+          fi
+
+      - name: Close the outage issue once it's back
+        if: steps.probe.outputs.problems == ''
+        run: |
+          for n in $(gh issue list --label uptime --state open --json number --jq '.[].number'); do
+            gh issue close "$n" --comment "Back up at $(date -u +'%F %R') UTC."
+          done

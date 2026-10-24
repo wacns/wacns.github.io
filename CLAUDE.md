@@ -95,3 +95,17 @@ git push origin main
 ```
 
 Then confirm the Workers Build succeeded (Cloudflare dashboard → Workers & Pages → wacns-github-io → Deployments).
+
+## Automation (GitHub Actions)
+
+Alerts arrive as GitHub issues that mention @wacns.
+
+| Workflow | When | What |
+|---|---|---|
+| `site-checks.yml` | Every push to `main` / PR | html-validate, `tools/check_links.py`, and "generated pages up to date". Pushes deploy immediately, so a failure opens a `site-checks` issue rather than blocking. |
+| `uptime.yml` | Every 15 min | Probes wacns.com, /til/ and the subdomain 404. Opens one `uptime` issue on failure (after a retry), closes it on recovery. App subdomains are deliberately not monitored. |
+| `weekly-visitors.yml` | Mondays 07:17 Bahrain | Posts last week's Cloudflare Web Analytics numbers (`tools/weekly_visitors.py`) as a `weekly-report` issue. Needs repo secret `CF_ANALYTICS_TOKEN` (Account Analytics: Read); skips without it. |
+
+GitHub disables scheduled workflows after 60 days without repo activity; re-enable them under Actions if that happens.
+
+The GitHub Pages copy (wacns.github.io) redirects to the same path on wacns.com via the inline boot script.

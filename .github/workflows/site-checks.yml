@@ -1,0 +1,56 @@
+name: Site checks
+
+# Runs on every push to main (and on pull requests). Pushes deploy straight away,
+# so this is an alarm rather than a gate: if something broke, an issue is opened.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate HTML
+        run: >
+          npx --yes html-validate@11
+          index.html ar/index.html 404.html 403.html stremio/index.html
+          til/index.html til/*/index.html uses/index.html
+
+      - name: Check internal links
+        run: python3 tools/check_links.py
+
+      - name: Check generated pages are up to date
+        run: |
+          python3 tools/build_pages.py . > /dev/null
+          if ! git diff --quiet -- '*.html'; then
+            echo "::error::Generated pages differ from tools/build_pages.py output. Run: python3 tools/build_pages.py ."
+            git diff --stat -- '*.html'
+            exit 1
+          fi
+
+      - name: Open an issue if checks failed
+        if: failure() && github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          gh label create site-checks --color B60205 --description "Automated site checks" 2>/dev/null || true
+          gh issue create --label site-checks \
+            --title "Site checks failed on ${GITHUB_SHA::7}" \
+            --body "The checks for commit ${GITHUB_SHA::7} failed. Details: ${RUN_URL}
+
+          The change is already live on wacns.com, so take a look soon.
+
+          cc @wacns"
