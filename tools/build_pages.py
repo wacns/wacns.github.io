@@ -35,11 +35,19 @@ S = {
   "en": dict(skip="Skip to content", palette="Search and commands", theme="Switch theme", lang_label="العربية", lang_href="/ar/",
              lang_aria="Read this page in Arabic", site="Site", elsewhere="Elsewhere", projects="Projects", notes="TIL",
              uses="Uses", about_short="Backend developer in Manama, Bahrain.", colophon="Plain HTML &amp; CSS, served by Cloudflare Workers",
-             home="Home", palette_label="Command palette"),
+             home="Home", palette_label="Command palette",
+             privacy="Privacy", cookie_settings="Cookie settings",
+             consent_label="Cookie consent",
+             consent_text="I use Google Analytics to see which pages are useful. It sets cookies, so it only runs if you allow it.",
+             accept="Allow", decline="No thanks"),
   "ar": dict(skip="انتقل إلى المحتوى", palette="البحث والأوامر", theme="تبديل المظهر", lang_label="EN", lang_href="/",
              lang_aria="Read this page in English", site="الموقع", elsewhere="في مكان آخر", projects="المشاريع", notes="تعلّمت اليوم",
              uses="أدواتي", about_short="مطوّر أنظمة خلفية في المنامة، البحرين.", colophon="HTML و CSS بسيطة، تُقدَّم عبر Cloudflare Workers",
-             home="الرئيسية", palette_label="لوحة الأوامر"),
+             home="الرئيسية", palette_label="لوحة الأوامر",
+             privacy="الخصوصية", cookie_settings="إعدادات ملفات تعريف الارتباط",
+             consent_label="الموافقة على ملفات تعريف الارتباط",
+             consent_text="أستخدم Google Analytics لمعرفة الصفحات المفيدة. يضع ملفات تعريف ارتباط، لذلك لا يعمل إلا إذا سمحت بذلك.",
+             accept="سماح", decline="لا، شكرًا"),
 }
 
 def head(lang, title, desc, path, extra="", alternates=None, og=True, og_image="/og.png", canonical=True, robots=None):
@@ -112,7 +120,14 @@ def palette(lang):
       <div class="palette-hint" aria-hidden="true"></div>
     </div>
   </div>
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>"""
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <section class="consent" id="consent" aria-label="{s['consent_label']}" hidden>
+    <p>{s['consent_text']} <a href="/privacy/">{s['privacy']}</a></p>
+    <div class="consent-actions">
+      <button type="button" class="btn btn-ghost" data-consent="denied">{s['decline']}</button>
+      <button type="button" class="btn btn-ghost" data-consent="granted">{s['accept']}</button>
+    </div>
+  </section>"""
 
 def footer(lang, home):
     s = S[lang]
@@ -141,7 +156,7 @@ def footer(lang, home):
         </div>
       </div>
       <div class="footer-bottom">
-        <span>© 2026 wacns</span>
+        <span>© 2026 wacns · <a href="/privacy/">{s['privacy']}</a><button type="button" class="link-btn" id="cookieSettings" hidden> · {s['cookie_settings']}</button></span>
         <span class="colophon">{s['colophon']}<br><span id="lastDeploy" hidden></span></span>
       </div>
     </div>
@@ -564,6 +579,30 @@ def uses_page():
         '<h1>Uses</h1>\n      <p class="lede">The languages, data stores and tools I reach for when I build things.</p>',
         body.rstrip("\n"), og_image="/uses/og.png")
 
+def privacy_page():
+    body = """      <p>Short version: this is a personal site. I don\u2019t run ads, sell data or build profiles of anyone. Here\u2019s exactly what happens when you visit.</p>
+
+      <h2>Always on, no cookies</h2>
+      <ul>
+        <li><strong>Cloudflare Web Analytics</strong> counts page views, the country you\u2019re in, your device type and the page that sent you here. It uses no cookies and doesn\u2019t identify or follow you.</li>
+        <li><strong>Cloudflare</strong> hosts the site and, like any server, sees your IP address to deliver pages and block attacks.</li>
+        <li><strong>GitHub</strong>: the project stats and activity graph are loaded by your browser from GitHub\u2019s public API and a contributions service, which see your IP address like any website you load.</li>
+      </ul>
+
+      <h2>Only if you allow it</h2>
+      <p><strong>Google Analytics</strong> shows me which pages are useful and how people find them. It sets cookies (<code>_ga</code>, <code>_ga_*</code>) and Google processes the data under its own privacy policy. It doesn\u2019t load at all unless you choose <em>Allow</em> in the cookie banner.</p>
+      <p>You can change your mind any time with <em>Cookie settings</em> at the bottom of every page. Choosing <em>No thanks</em> stops it and removes its cookies.</p>
+
+      <h2>Stored in your browser only</h2>
+      <p>Your theme, intro length and cookie choice are saved in your browser\u2019s local storage so the site remembers them. They never leave your device.</p>
+
+      <h2>Contact</h2>
+      <p>Questions about any of this: message me on <a href="https://www.linkedin.com/in/abdullah-mohammed-137928219" target="_blank" rel="noopener">LinkedIn</a>.</p>"""
+    article_page("/privacy/", "Privacy", "What this site collects, and what it doesn\u2019t.",
+        '<a href="/">Home</a> / Privacy',
+        '<h1>Privacy</h1>\n      <p class="page-meta">Last updated <time datetime="2026-10-24">Oct 24, 2026</time></p>',
+        body)
+
 def page_404():
     """Also served for unknown *.wacns.com hosts, so every link is absolute to wacns.com."""
     body = f"""
@@ -589,13 +628,14 @@ def page_404():
 {TAIL}"""
     page = head("en", "Page not found — wacns", "This page doesn\u2019t exist.", "/404.html", og=False, canonical=False, robots="noindex") + body
     # Make site links absolute (shared files under /assets and /favicon.svg are served on every host)
-    for a in ('href="/"', 'href="/til/"', 'href="/uses/"', 'href="/ar/"', 'href="/#projects"'):
+    for a in ('href="/"', 'href="/til/"', 'href="/uses/"', 'href="/ar/"', 'href="/#projects"', 'href="/privacy/"'):
         page = page.replace(a, a.replace('"/', '"https://wacns.com/'))
     write("/404.html", page)
 
 homepage("en")
 homepage("ar")
 page_404()
+privacy_page()
 til_index()
 til_assetsignore()
 til_worker()

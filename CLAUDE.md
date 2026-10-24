@@ -104,8 +104,15 @@ Alerts arrive as GitHub issues that mention @wacns.
 |---|---|---|
 | `site-checks.yml` | Every push to `main` / PR | html-validate, `tools/check_links.py`, and "generated pages up to date". Pushes deploy immediately, so a failure opens a `site-checks` issue rather than blocking. |
 | `uptime.yml` | Every 15 min | Probes wacns.com, /til/ and the subdomain 404. Opens one `uptime` issue on failure (after a retry), closes it on recovery. App subdomains are deliberately not monitored. |
-| `weekly-visitors.yml` | Mondays 07:17 Bahrain | Posts last week's Cloudflare Web Analytics numbers (`tools/weekly_visitors.py`) as a `weekly-report` issue. Needs repo secret `CF_ANALYTICS_TOKEN` (Account Analytics: Read); skips without it. |
+| `weekly-visitors.yml` | Mondays 07:17 Bahrain | Posts a `weekly-report` issue (`tools/weekly_visitors.py`) combining Cloudflare Web Analytics (secret `CF_ANALYTICS_TOKEN`), Google Analytics 4 (`GOOGLE_SA_KEY` + `GA4_PROPERTY_ID`) and Search Console (`GOOGLE_SA_KEY`, optional variable `GSC_SITE`). Each source is optional. |
 
 GitHub disables scheduled workflows after 60 days without repo activity; re-enable them under Actions if that happens.
 
 The GitHub Pages copy (wacns.github.io) redirects to the same path on wacns.com via the inline boot script.
+
+## Google Analytics and consent
+
+- GA4 is wired in `assets/site.js` via `GA_ID` (empty = no banner, no tracking). It only loads after the visitor clicks **Allow** in the consent banner; **No thanks** disables it and deletes `_ga*` cookies. Choice is stored in localStorage (`consent:analytics`); "Cookie settings" in the footer reopens the banner.
+- Keep both banner buttons equally prominent (EU consent rules).
+- `/privacy/` describes everything collected. Update it if tracking changes.
+- After changing `GA_ID`, regenerate pages so the `site.js?v=` hash changes.

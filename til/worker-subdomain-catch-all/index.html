@@ -18,7 +18,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <script>(function(){if(/\.github\.io$/.test(location.hostname)){location.replace('https://wacns.com'+location.pathname+location.search+location.hash);return;}var d=document.documentElement,t=null;d.classList.add('js');try{t=localStorage.getItem('theme');}catch(e){}if(t!=='light'&&t!=='dark'){t=window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';}d.setAttribute('data-theme',t);try{if(localStorage.getItem('intro')==='long')d.setAttribute('data-intro','long');}catch(e){}})();</script>
   <link rel="preload" href="/assets/fonts/inter-latin-var.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/assets/site.css?v=76ee0aa029">
+  <link rel="stylesheet" href="/assets/site.css?v=4772c7702b">
   <script type="application/ld+json">
   {"@context": "https://schema.org", "@type": "BlogPosting", "headline": "One Worker, one site, and a 404 for every unknown subdomain", "description": "Wildcard DNS, routes with no Worker attached, and run_worker_first.", "datePublished": "2026-10-24", "url": "https://wacns.com/til/worker-subdomain-catch-all/", "author": {"@type": "Person", "name": "Abdullah", "alternateName": "wacns", "url": "https://wacns.com/"}}
   </script>
@@ -108,7 +108,7 @@
         </div>
       </div>
       <div class="footer-bottom">
-        <span>© 2026 wacns</span>
+        <span>© 2026 wacns · <a href="/privacy/">Privacy</a><button type="button" class="link-btn" id="cookieSettings" hidden> · Cookie settings</button></span>
         <span class="colophon">Plain HTML &amp; CSS, served by Cloudflare Workers<br><span id="lastDeploy" hidden></span></span>
       </div>
     </div>
@@ -122,7 +122,14 @@
     </div>
   </div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <section class="consent" id="consent" aria-label="Cookie consent" hidden>
+    <p>I use Google Analytics to see which pages are useful. It sets cookies, so it only runs if you allow it. <a href="/privacy/">Privacy</a></p>
+    <div class="consent-actions">
+      <button type="button" class="btn btn-ghost" data-consent="denied">No thanks</button>
+      <button type="button" class="btn btn-ghost" data-consent="granted">Allow</button>
+    </div>
+  </section>
 
-  <script src="/assets/site.js?v=bf1282030d" defer></script>
+  <script src="/assets/site.js?v=691cc29553" defer></script>
 </body>
 </html>

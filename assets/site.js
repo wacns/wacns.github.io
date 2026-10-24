@@ -8,6 +8,8 @@
   var LINKEDIN = 'https://www.linkedin.com/in/abdullah-mohammed-137928219';
   var GITHUB = 'https://github.com/wacns';
   var HOUR = 3600000;
+  // Google Analytics 4 measurement ID (e.g. 'G-ABC123XYZ'). Empty = no banner, no tracking.
+  var GA_ID = '';
   // On unknown *.wacns.com hosts (which show the 404 page) site links must point back to wacns.com
   var BASE = (/\.wacns\.com$/.test(location.hostname) && location.hostname !== 'www.wacns.com') ? 'https://wacns.com' : '';
 
@@ -329,5 +331,56 @@
     });
     var hint = $('.palette-hint', root);
     if (hint) hint.innerHTML = '<span><kbd>↑↓</kbd> ' + T.navigate + '</span><span><kbd>↵</kbd> ' + T.open + '</span><span><kbd>esc</kbd> ' + T.close + '</span>';
+  })();
+
+  // ── Cookie consent + Google Analytics (loads only after "Allow") ──
+  (function () {
+    var banner = $('#consent'), settings = $('#cookieSettings');
+    if (!GA_ID || !banner || BASE) return;   // not configured, or on a 404 subdomain
+    var KEY = 'consent:analytics';
+
+    function loadGA() {
+      if (window.__gaLoaded) return;
+      window.__gaLoaded = true;
+      window['ga-disable-' + GA_ID] = false;
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function () { window.dataLayer.push(arguments); };
+      window.gtag('js', new Date());
+      window.gtag('config', GA_ID);
+      var sc = document.createElement('script');
+      sc.async = true;
+      sc.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(GA_ID);
+      document.head.appendChild(sc);
+    }
+    function stopGA() {
+      window['ga-disable-' + GA_ID] = true;
+      // Remove Google Analytics cookies on this host and the parent domain
+      document.cookie.split(';').forEach(function (c) {
+        var name = c.split('=')[0].trim();
+        if (!/^_ga/.test(name)) return;
+        var host = location.hostname, parts = host.split('.');
+        [host, '.' + host, '.' + parts.slice(-2).join('.')].forEach(function (d) {
+          document.cookie = name + '=; Max-Age=0; path=/; domain=' + d;
+        });
+        document.cookie = name + '=; Max-Age=0; path=/';
+      });
+    }
+    function decide(choice) {
+      store(KEY, choice);
+      banner.hidden = true;
+      if (choice === 'granted') loadGA(); else stopGA();
+    }
+
+    $all('[data-consent]', banner).forEach(function (b) {
+      b.addEventListener('click', function () { decide(b.getAttribute('data-consent')); });
+    });
+    if (settings) {
+      settings.hidden = false;
+      settings.addEventListener('click', function () { banner.hidden = false; var first = $('button', banner); if (first) first.focus(); });
+    }
+
+    var saved = store(KEY);
+    if (saved === 'granted') loadGA();
+    else if (saved !== 'denied') banner.hidden = false;
   })();
 })();

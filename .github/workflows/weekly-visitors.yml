@@ -1,8 +1,11 @@
 name: Weekly visitors
 
-# Every Monday morning (Bahrain time), posts last week's Cloudflare Web Analytics
-# numbers as an issue. Needs a repository secret CF_ANALYTICS_TOKEN
-# (Cloudflare API token with Account → Account Analytics → Read). Skips quietly without it.
+# Every Monday morning (Bahrain time), posts last week's numbers as an issue.
+# Each source is optional and needs repository secrets:
+#   Cloudflare Web Analytics  CF_ANALYTICS_TOKEN  (API token: Account → Account Analytics → Read)
+#   Google Analytics 4        GOOGLE_SA_KEY (service-account JSON) + GA4_PROPERTY_ID (numeric)
+#   Google Search Console     GOOGLE_SA_KEY (+ optional repo variable GSC_SITE, default sc-domain:wacns.com)
+# With no secrets set it skips quietly.
 on:
   schedule:
     - cron: "17 4 * * 1"
@@ -20,9 +23,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install Google client
+        run: pip install --quiet google-auth requests
+
       - name: Build the report
         env:
           CF_API_TOKEN: ${{ secrets.CF_ANALYTICS_TOKEN }}
+          GOOGLE_SA_KEY: ${{ secrets.GOOGLE_SA_KEY }}
+          GA4_PROPERTY_ID: ${{ secrets.GA4_PROPERTY_ID }}
+          GSC_SITE: ${{ vars.GSC_SITE }}
         run: python3 tools/weekly_visitors.py > report.md
 
       - name: Post it as an issue
