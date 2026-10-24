@@ -1,12 +1,16 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "wacns-github-io",
+  "main": "worker.js",
   "compatibility_date": "2026-10-19",
   "observability": {
     "enabled": true
   },
   "assets": {
     "directory": ".",
+    "binding": "ASSETS",
+    // Run worker.js first so it can route by hostname
+    "run_worker_first": true,
     // Serve /404.html (with a 404 status) for any path that doesn't exist
     "not_found_handling": "404-page"
   }
